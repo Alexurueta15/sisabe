@@ -51,7 +51,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(user, null,
                             Collections.singletonList(new SimpleGrantedAuthority(jwtTokenUtil.getRoleFromToken(token))));
-
             if (!request.getMethod().equals("GET")) {
 
                 authenticationToken.setDetails(new Logbook(user, request.getRequestURI(),

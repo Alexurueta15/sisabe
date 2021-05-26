@@ -5,7 +5,6 @@ import edu.utez.sisabe.filter.JwtAuthenticationEntryPoint;
 import edu.utez.sisabe.filter.JwtAuthenticationFilter;
 import edu.utez.sisabe.filter.JwtAuthorizationFilter;
 import edu.utez.sisabe.service.UserService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -37,8 +36,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private JwtAuthorizationFilter jwtAuthorizationFilter;
 
-    private final String rootAdrress;
-
     @Bean
     BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
@@ -53,21 +50,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         config.addAllowedOriginPattern("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        source.registerCorsConfiguration((rootAdrress+"/**"), config);
+        source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
 
     public WebSecurityConfig(JwtTokenUtil jwtTokenUtil, UserService userService,
-                             JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, @Value("${rootAddress}") String rootAdrress){
+                             JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint){
         this.jwtTokenUtil = jwtTokenUtil;
         this.userService = userService;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-        this.rootAdrress = rootAdrress;
     }
 
     @PostConstruct
     public void init() throws Exception {
-        this.jwtAuthenticationFilter = new JwtAuthenticationFilter((rootAdrress+"/login"), jwtTokenUtil,
+        this.jwtAuthenticationFilter = new JwtAuthenticationFilter("/login", jwtTokenUtil,
                 authenticationManager());
         this.jwtAuthorizationFilter = new JwtAuthorizationFilter(jwtTokenUtil, authenticationManager());
     }
@@ -83,16 +79,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.cors();//añade los permisos para cors
         httpSecurity.csrf().disable()
-                .authorizeRequests().antMatchers(HttpMethod.POST, (rootAdrress+"/login")).permitAll()
-                .antMatchers((rootAdrress+"/admin/**")).hasAuthority("Administrador")
-                .antMatchers((rootAdrress+"/alumno/**")).hasAuthority("Alumno")
-                .antMatchers((rootAdrress+"/comite/**")).hasAuthority("Comité")
+                .authorizeRequests().antMatchers(HttpMethod.POST, "/login").permitAll()
+                .antMatchers("/admin/**").hasAuthority("Administrador")
+                .antMatchers("/alumno/**").hasAuthority("Alumno")
+                .antMatchers("/comite/**").hasAuthority("Comité")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(jwtAuthorizationFilter, BasicAuthenticationFilter.class)
-                .addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterAfter(jwtAuthorizationFilter, BasicAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

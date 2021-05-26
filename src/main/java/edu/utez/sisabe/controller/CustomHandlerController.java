@@ -22,21 +22,13 @@ public class CustomHandlerController {
     @ExceptionHandler(value = {UsernameNotFoundException.class})
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ErrorMessage usernameNotFoundException() {
-        return new ErrorMessage(
-                HttpStatus.NOT_FOUND.value(),
-                new Date(),
-                "Error en la solicitud",
-                "Usuario del token no encontrado");
+        return new ErrorMessage("Usuario del token no encontrado");
     }
 
     @ExceptionHandler(value = AccessDeniedException.class)
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     public ErrorMessage accessDenied(){
-        return new ErrorMessage(
-                HttpStatus.FORBIDDEN.value(),
-                new Date(),
-                "Forbidden",
-                "Forbidden");
+        return new ErrorMessage("Forbidden");
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
@@ -57,20 +49,14 @@ public class CustomHandlerController {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorMessage notBodyException() {
-        return new ErrorMessage(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                new Date(),
-                "Error en la solicitud",
-                "La solicitud no tiene cuerpo o no es de tipo application/json");
+        return new ErrorMessage("La solicitud no tiene cuerpo o no es de tipo application/json");
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorMessage globalExceptionHandler(Exception ex) {
         return new ErrorMessage(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                new Date(),
-                "Error interno",
-                ex.getCause() == null ? "El servidor no añadió detalles" : ex.getCause().toString().split(":", 2)[1]);
+                ex.getCause() == null ? "El servidor no añadió detalles" :
+                        ex.getCause().toString().split(":", 2)[1]);
     }
 }

@@ -4,11 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.utez.sisabe.bean.UserDTO;
 import edu.utez.sisabe.entity.User;
 import edu.utez.sisabe.jwt.JwtTokenUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -18,7 +19,10 @@ import java.io.IOException;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+
     private final JwtTokenUtil jwtTokenUtil;
+
+    Logger loggerMessage = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     public JwtAuthenticationFilter(String authenticationEndPoint, JwtTokenUtil jwtTokenUtil,
                                    AuthenticationManager authenticationManager) {

@@ -20,11 +20,10 @@ public class User implements UserDetails {
         this.enabled = true;
     }
 
-    public User(String id, String username, String password, Role role) {
+    public User(String id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.role = role;
         this.enabled = true;
     }
 

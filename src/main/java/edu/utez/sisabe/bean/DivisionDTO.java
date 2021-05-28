@@ -25,7 +25,11 @@ public class DivisionDTO {
             groups = {CreateDivision.class, UpdateDivision.class})
     private String acronym;
 
+    @NotEmpty(message = "El estatus de la división no puede ser nulo",
+            groups = {UpdateDivision.class})
+    private Boolean enabled;
+
     public Division cloneEntity(){
-        return new Division(getId(),getName(), getAcronym());
+        return new Division(getId(),getName(), getAcronym(), getEnabled());
     }
 }

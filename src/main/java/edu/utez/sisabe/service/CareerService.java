@@ -49,7 +49,8 @@ public class CareerService {
 
     public void delete(String id) {
         Career prevCareer = careerRepository.findCareerById(id);
-        Career career = new Career(prevCareer.getId(), prevCareer.getName(), prevCareer.getDivision());
+        Career career = new Career(prevCareer.getId(), prevCareer.getName(),
+                prevCareer.getDivision(), prevCareer.getEnabled());
         career.setEnabled(false);
         careerRepository.save(career);
         logbookService.update(prevCareer, career);

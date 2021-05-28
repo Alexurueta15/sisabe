@@ -13,17 +13,11 @@ public class DivisionService {
 
     private final DivisionRepository divisionRepository;
 
-    private final CareerService careerService;
-
     private final LogbookService logbookService;
 
-    private final CoordinatorService coordinatorService;
-
-    public DivisionService(DivisionRepository divisionRepository, CareerService careerService, LogbookService logbookService, CoordinatorService coordinatorService) {
+    public DivisionService(DivisionRepository divisionRepository, LogbookService logbookService) {
         this.divisionRepository = divisionRepository;
-        this.careerService = careerService;
         this.logbookService = logbookService;
-        this.coordinatorService = coordinatorService;
     }
 
     public List<Division> findAll() {
@@ -43,23 +37,12 @@ public class DivisionService {
         Division prevDivision = divisionRepository.findDivisionById(division.getId());
         divisionRepository.save(division);
         logbookService.update(prevDivision, division);
-        List<Career> careers = careerService.findAllByDivision(division);
-        for (Career career :
-                careers) {
-            career.setDivision(division);
-        }
-        careerService.saveAll(careers);
-        List<Coordinator> coordinators = coordinatorService.findAllByDivision(division);
-        for (Coordinator coordinator :
-                coordinators) {
-            coordinator.setDivision(division);
-        }
-        coordinatorService.saveAll(coordinators);
     }
 
     public void delete(String id) {
         Division prevDivision = divisionRepository.findDivisionById(id);
-        Division division = new Division(prevDivision.getId(), prevDivision.getName(), prevDivision.getAcronym());
+        Division division = new Division(prevDivision.getId(), prevDivision.getName(),
+                prevDivision.getAcronym(), prevDivision.getEnabled());
         division.setEnabled(false);
         divisionRepository.save(division);
         logbookService.update(prevDivision, division);

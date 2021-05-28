@@ -25,16 +25,13 @@ public class UserDTO {
     private String username;
 
     @NotEmpty(message = "La contraseña de usuario no puede ser nula" ,
-            groups = {UpdateUser.class, CreateUser.class,
-                    CreateCoordinator.class})
+            groups = {UpdateUser.class, CreateUser.class})
     @Size(min = 4, max = 16, message = "La contraseña de usuario debe ser de al menos 4 caracteres, máximo 16" ,
-            groups = {UpdateUser.class, CreateUser.class,
-                    CreateCoordinator.class})
+            groups = {UpdateUser.class, CreateUser.class})
     @Pattern(regexp = "^(?=.*[A-Z][a-z])(?=.*\\d)[A-Za-z\\d]*$",
             message = "La contraseña debe contener al menos una letra minúscula, una letra mayúscula y " +
                     "un número" ,
-            groups = {UpdateUser.class, CreateUser.class,
-                    CreateCoordinator.class})
+            groups = {UpdateUser.class, CreateUser.class})
     private String password;
 
     public User cloneEntity() {

@@ -48,6 +48,7 @@ public class AdministratorController {
 
     @PostMapping("/division")
     public Object saveDivision(@Validated(CreateDivision.class) @RequestBody DivisionDTO divisionDTO) {
+        divisionDTO.setEnabled(true);
         divisionService.save(divisionDTO.cloneEntity());
         return new SuccessMessage("División registrada");
     }
@@ -71,6 +72,7 @@ public class AdministratorController {
 
     @PostMapping("/career")
     public Object saveCareer(@Validated(CreateCareer.class) @RequestBody CareerDTO careerDTO) {
+        careerDTO.setEnabled(true);
         careerService.save(careerDTO.cloneEntity());
         return new SuccessMessage("Carrera registrada");
     }
@@ -94,6 +96,7 @@ public class AdministratorController {
 
     @PostMapping("/coordinator")
     public Object saveCoordinator(@Validated(CreateCoordinator.class) @RequestBody CoordinatorDTO coordinatorDTO) {
+        coordinatorDTO.setEnabled(true);
         coordinatorService.save(coordinatorDTO.cloneEntity());
         return new SuccessMessage("Coordinador registrado");
     }

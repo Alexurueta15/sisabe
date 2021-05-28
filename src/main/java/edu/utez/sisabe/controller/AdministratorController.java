@@ -5,6 +5,7 @@ import edu.utez.sisabe.bean.CoordinatorDTO;
 import edu.utez.sisabe.bean.DivisionDTO;
 import edu.utez.sisabe.bean.SuccessMessage;
 import edu.utez.sisabe.entity.Career;
+import edu.utez.sisabe.entity.Coordinator;
 import edu.utez.sisabe.entity.Division;
 import edu.utez.sisabe.entity.Logbook;
 import edu.utez.sisabe.service.*;
@@ -87,8 +88,8 @@ public class AdministratorController {
     }
 
     @GetMapping("/coordinator")
-    public List<Career> findAllCoordinators() {
-        return careerService.findAll();
+    public List<Coordinator> findAllCoordinators() {
+        return coordinatorService.findAll();
     }
 
     @PostMapping("/coordinator")

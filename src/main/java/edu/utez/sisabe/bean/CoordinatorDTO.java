@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -21,18 +22,17 @@ public class CoordinatorDTO {
             groups = {CreateCoordinator.class, UpdateCoordinator.class})
     private String name;
 
-    @Email(message = "El nombre de usuario debe ser un correo electrónico" ,
-            groups = {UpdateCoordinator.class, CreateCoordinator.class})
-    @NotEmpty(message = "El nombre de usuario no puede ser nulo",
-            groups = {UpdateCoordinator.class, CreateCoordinator.class})
-    private String email;
+    @Valid
+    @NotNull(message = "Se necesitan datos de usuario",
+            groups = {CreateCoordinator.class})
+    private UserDTO user;
 
     @Valid
-    @NotEmpty(message = "El nombre de la carrera no puede ser nulo",
+    @NotNull(message = "Se necesitan datos de la División Académica",
             groups = {UpdateCoordinator.class, CreateCoordinator.class})
-    private DivisionDTO divisionDTO;
+    private DivisionDTO division;
 
     public Coordinator cloneEntity(){
-        return new Coordinator(getId(), getName(), getEmail(), getDivisionDTO().cloneEntity());
+        return new Coordinator(getId(), getName(), getUser().cloneEntity(), getDivision().cloneEntity());
     }
 }

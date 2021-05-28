@@ -53,20 +53,15 @@ public class CoordinatorService {
         return coordinatorRepository.findAllByEnabledTrue();
     }
 
-    public void save(Coordinator coordinator) {
+    public void save(Coordinator coordinator) throws MessagingException {
         String passGenerated = PasswordGenerator.getPassword();
-        try {
+            coordinator.getUser().setPassword(passGenerated);
+            coordinator.getUser().setRole(new Role("Comité"));
+            User newUser = userService.save(coordinator.getUser());
+            coordinator.setUser(newUser);
+            coordinatorRepository.save(coordinator);
+            logbookService.save(coordinator);
             emailService.sendEmail(coordinator.getUser().getUsername(), passGenerated);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-        System.out.println("pass>>" + passGenerated);
-        coordinator.getUser().setPassword(bCryptPasswordEncoder.encode(passGenerated));
-        coordinator.getUser().setRole(new Role("Comité"));
-        User newUser = userService.save(coordinator.getUser());
-        coordinator.setUser(newUser);
-        coordinatorRepository.save(coordinator);
-        logbookService.save(coordinator);
     }
 
     public void update(Coordinator coordinator) {

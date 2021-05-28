@@ -13,6 +13,7 @@ import edu.utez.sisabe.util.group.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 @RestController
@@ -95,7 +96,8 @@ public class AdministratorController {
     }
 
     @PostMapping("/coordinator")
-    public Object saveCoordinator(@Validated(CreateCoordinator.class) @RequestBody CoordinatorDTO coordinatorDTO) {
+    public Object saveCoordinator(@Validated(CreateCoordinator.class) @RequestBody CoordinatorDTO coordinatorDTO)
+            throws MessagingException {
         coordinatorDTO.setEnabled(true);
         coordinatorService.save(coordinatorDTO.cloneEntity());
         return new SuccessMessage("Coordinador registrado");

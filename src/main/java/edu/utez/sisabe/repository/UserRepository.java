@@ -17,4 +17,6 @@ public interface UserRepository extends MongoRepository<User, String> {
     List<User> findAllByRole(Role role);
 
     boolean existsByUsername(String username);
+
+    User save (User user);
 }

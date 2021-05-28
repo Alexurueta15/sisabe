@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -23,11 +24,11 @@ public class CareerDTO {
     private String name;
 
     @Valid
-    @NotEmpty(message = "El nombre de la carrera no puede ser nulo",
+    @NotNull(message = "Se necesitan datos de la División Académica",
             groups = {CreateCareer.class, UpdateCareer.class})
-    private DivisionDTO divisionDTO;
+    private DivisionDTO division;
 
     public Career cloneEntity(){
-        return new Career(getId(), getName(), getDivisionDTO().cloneEntity());
+        return new Career(getId(), getName(), getDivision().cloneEntity());
     }
 }

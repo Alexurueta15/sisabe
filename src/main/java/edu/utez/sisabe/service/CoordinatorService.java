@@ -2,10 +2,16 @@ package edu.utez.sisabe.service;
 
 import edu.utez.sisabe.entity.Coordinator;
 import edu.utez.sisabe.entity.Division;
+import edu.utez.sisabe.entity.Role;
 import edu.utez.sisabe.entity.User;
 import edu.utez.sisabe.repository.CoordinatorRepository;
+import edu.utez.sisabe.util.EmailService;
+import edu.utez.sisabe.util.PasswordGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 @Service
@@ -17,10 +23,17 @@ public class CoordinatorService {
 
     private final UserService userService;
 
-    public CoordinatorService(CoordinatorRepository coordinatorRepository, LogbookService logbookService, UserService userService) {
+    private final EmailService emailService;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public CoordinatorService(CoordinatorRepository coordinatorRepository, LogbookService logbookService,
+                              UserService userService, EmailService emailService) {
         this.coordinatorRepository = coordinatorRepository;
         this.logbookService = logbookService;
         this.userService = userService;
+        this.emailService = emailService;
     }
 
     public List<Coordinator> findAll() {
@@ -39,29 +52,36 @@ public class CoordinatorService {
         return coordinatorRepository.findAllByEnabledTrue();
     }
 
-    public void save(Coordinator coordinator) {
-        User newUser = userService.save(coordinator.getUser());
-        coordinator.setUser(newUser);
-        coordinatorRepository.save(coordinator);
-        logbookService.save(coordinator);
+    public void save(Coordinator coordinator) throws MessagingException {
+        String passGenerated = PasswordGenerator.getPassword();
+            coordinator.getUser().setPassword(passGenerated);
+            coordinator.getUser().setRole(new Role("Comité"));
+            User newUser = new User(userService.save(coordinator.getUser()).getId());
+            coordinator.setUser(newUser);
+            coordinator.setDivision(new Division(coordinator.getDivision().getId()));
+            coordinatorRepository.save(coordinator);
+            logbookService.save(coordinator);
+            emailService.sendEmail(coordinator.getUser().getUsername(), passGenerated);
     }
 
     public void update(Coordinator coordinator) {
         Coordinator prevCoordinator = coordinatorRepository.findCoordinatorById(coordinator.getId());
-        coordinator.getUser().setId(prevCoordinator.getUser().getId());
+        coordinator.setUser(new User(prevCoordinator.getUser().getId()));
+        coordinator.setDivision(new Division(coordinator.getDivision().getId()));
         coordinatorRepository.save(coordinator);
         logbookService.update(prevCoordinator, coordinator);
     }
 
     public void delete(String id) {
         Coordinator prevCoordinator = coordinatorRepository.findCoordinatorById(id);
-        Coordinator coordinator = new Coordinator(prevCoordinator.getId(),
-                prevCoordinator.getName(),
-                prevCoordinator.getUser(),
-                prevCoordinator.getDivision());
+        Coordinator coordinator = new Coordinator(prevCoordinator.getId(), prevCoordinator.getName(),
+                prevCoordinator.getLastname(), prevCoordinator.getUser(),
+                prevCoordinator.getDivision(), prevCoordinator.getEnabled());
         coordinator.setEnabled(false);
         coordinator.getUser().setEnabled(false);
+        coordinator.setDivision(new Division(coordinator.getDivision().getId()));
         userService.save(coordinator.getUser());
+        coordinator.setUser(new User(prevCoordinator.getUser().getId()));
         logbookService.update(prevCoordinator, coordinator);
         coordinatorRepository.save(coordinator);
     }

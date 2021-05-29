@@ -23,12 +23,18 @@ public class CareerDTO {
             groups = {CreateCareer.class, UpdateCareer.class})
     private String name;
 
+    @NotEmpty(message = "El nombre del nivel académico no puede ser nulo",
+            groups = {CreateCareer.class, UpdateCareer.class})
+    private String degree;
+
     @Valid
     @NotNull(message = "Se necesitan datos de la División Académica",
             groups = {CreateCareer.class, UpdateCareer.class})
     private DivisionDTO division;
 
+    private Boolean enabled;
+
     public Career cloneEntity(){
-        return new Career(getId(), getName(), getDivision().cloneEntity());
+        return new Career(getId(), getName(), getDivision().cloneEntity(),getDegree(), getEnabled());
     }
 }

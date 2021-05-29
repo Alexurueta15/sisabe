@@ -1,9 +1,6 @@
 package edu.utez.sisabe.controller;
 
-import edu.utez.sisabe.bean.CareerDTO;
-import edu.utez.sisabe.bean.CoordinatorDTO;
-import edu.utez.sisabe.bean.DivisionDTO;
-import edu.utez.sisabe.bean.SuccessMessage;
+import edu.utez.sisabe.bean.*;
 import edu.utez.sisabe.entity.Career;
 import edu.utez.sisabe.entity.Coordinator;
 import edu.utez.sisabe.entity.Division;
@@ -13,6 +10,7 @@ import edu.utez.sisabe.util.group.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 @RestController
@@ -27,13 +25,17 @@ public class AdministratorController {
 
     private final LogbookService logbookService;
 
+    private final UserService userService;
+
 
     public AdministratorController(DivisionService divisionService, CareerService careerService,
-                                   CoordinatorService coordinatorService, LogbookService logbookService) {
+                                   CoordinatorService coordinatorService, LogbookService logbookService,
+                                   UserService userService) {
         this.divisionService = divisionService;
         this.careerService = careerService;
         this.coordinatorService = coordinatorService;
         this.logbookService = logbookService;
+        this.userService = userService;
     }
 
     @GetMapping("/logbook")
@@ -48,6 +50,7 @@ public class AdministratorController {
 
     @PostMapping("/division")
     public Object saveDivision(@Validated(CreateDivision.class) @RequestBody DivisionDTO divisionDTO) {
+        divisionDTO.setEnabled(true);
         divisionService.save(divisionDTO.cloneEntity());
         return new SuccessMessage("División registrada");
     }
@@ -71,6 +74,7 @@ public class AdministratorController {
 
     @PostMapping("/career")
     public Object saveCareer(@Validated(CreateCareer.class) @RequestBody CareerDTO careerDTO) {
+        careerDTO.setEnabled(true);
         careerService.save(careerDTO.cloneEntity());
         return new SuccessMessage("Carrera registrada");
     }
@@ -93,14 +97,21 @@ public class AdministratorController {
     }
 
     @PostMapping("/coordinator")
-    public Object saveCoordinator(@Validated(CreateCoordinator.class) @RequestBody CoordinatorDTO coordinatorDTO) {
+    public Object saveCoordinator(@Validated(CreateCoordinator.class) @RequestBody CoordinatorDTO coordinatorDTO)
+            throws MessagingException {
+        if (userService.existsByUsername(coordinatorDTO.getUser().getUsername()))
+            return new ErrorMessage("Usuario existente");
+        if (divisionService.findById(coordinatorDTO.getDivision().getId()).equals(null)
+                && divisionService.findById(coordinatorDTO.getDivision().getId()).getEnabled())
+            return new ErrorMessage("División ingresada no existente");
+        coordinatorDTO.setEnabled(true);
         coordinatorService.save(coordinatorDTO.cloneEntity());
         return new SuccessMessage("Coordinador registrado");
     }
 
     @PutMapping("/coordinator")
     public Object UpdateCoordinator(@Validated(UpdateCoordinator.class) @RequestBody CoordinatorDTO coordinatorDTO) {
-        coordinatorService.update(coordinatorDTO.cloneEntity());
+        coordinatorService.update(coordinatorDTO.cloneEntityWOUser());
         return new SuccessMessage("Coordinador actualizado");
     }
 

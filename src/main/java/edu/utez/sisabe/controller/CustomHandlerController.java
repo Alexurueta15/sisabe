@@ -55,6 +55,7 @@ public class CustomHandlerController {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorMessage globalExceptionHandler(Exception ex) {
+        ex.printStackTrace();
         return new ErrorMessage(
                 ex.getCause() == null ? "El servidor no añadió detalles" :
                         ex.getCause().toString().split(":", 2)[1]);

@@ -27,6 +27,10 @@ public class User implements UserDetails {
         this.enabled = true;
     }
 
+    public User(String id) {
+        this.id = id;
+    }
+
     @Id
     private String id;
     private String username;

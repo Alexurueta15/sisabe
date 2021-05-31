@@ -38,5 +38,4 @@ public class CoordinatorDTO {
     public Coordinator cloneEntity() {
         return new Coordinator(getId(), getName(), getLastname(), getUser() != null ? getUser().cloneEntity() : null,
                 getDivision().cloneEntity());
-    }
 }

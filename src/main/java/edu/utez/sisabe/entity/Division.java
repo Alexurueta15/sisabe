@@ -19,6 +19,10 @@ public class Division {
         this.enabled = enabled;
     }
 
+    public Division(String id) {
+        this.id = id;
+    }
+
     @Id
     private String id;
     private String name;

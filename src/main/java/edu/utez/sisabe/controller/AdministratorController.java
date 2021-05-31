@@ -1,9 +1,6 @@
 package edu.utez.sisabe.controller;
 
-import edu.utez.sisabe.bean.CareerDTO;
-import edu.utez.sisabe.bean.CoordinatorDTO;
-import edu.utez.sisabe.bean.DivisionDTO;
-import edu.utez.sisabe.bean.SuccessMessage;
+import edu.utez.sisabe.bean.*;
 import edu.utez.sisabe.entity.Career;
 import edu.utez.sisabe.entity.Coordinator;
 import edu.utez.sisabe.entity.Division;
@@ -28,13 +25,17 @@ public class AdministratorController {
 
     private final LogbookService logbookService;
 
+    private final UserService userService;
+
 
     public AdministratorController(DivisionService divisionService, CareerService careerService,
-                                   CoordinatorService coordinatorService, LogbookService logbookService) {
+                                   CoordinatorService coordinatorService, LogbookService logbookService,
+                                   UserService userService) {
         this.divisionService = divisionService;
         this.careerService = careerService;
         this.coordinatorService = coordinatorService;
         this.logbookService = logbookService;
+        this.userService = userService;
     }
 
     @GetMapping("/logbook")
@@ -98,6 +99,11 @@ public class AdministratorController {
     @PostMapping("/coordinator")
     public Object saveCoordinator(@Validated(CreateCoordinator.class) @RequestBody CoordinatorDTO coordinatorDTO)
             throws MessagingException {
+        if (userService.existsByUsername(coordinatorDTO.getUser().getUsername()))
+            return new ErrorMessage("Usuario existente");
+        if (divisionService.findById(coordinatorDTO.getDivision().getId()).equals(null)
+                && divisionService.findById(coordinatorDTO.getDivision().getId()).getEnabled())
+            return new ErrorMessage("División ingresada no existente");
         Coordinator coordinator = coordinatorDTO.cloneEntity();
         coordinator.getUser().setRole("Comité");
         coordinatorService.save(coordinator);
@@ -106,7 +112,7 @@ public class AdministratorController {
 
     @PutMapping("/coordinator")
     public Object UpdateCoordinator(@Validated(UpdateCoordinator.class) @RequestBody CoordinatorDTO coordinatorDTO) {
-        coordinatorService.update(coordinatorDTO.cloneEntity());
+        coordinatorService.update(coordinatorDTO.cloneEntityWOUser());
         return new SuccessMessage("Coordinador actualizado");
     }
 

@@ -2,6 +2,7 @@ package edu.utez.sisabe.service;
 
 import edu.utez.sisabe.entity.Coordinator;
 import edu.utez.sisabe.entity.Division;
+import edu.utez.sisabe.entity.Role;
 import edu.utez.sisabe.entity.User;
 import edu.utez.sisabe.repository.CoordinatorRepository;
 import edu.utez.sisabe.util.EmailService;
@@ -59,7 +60,8 @@ public class CoordinatorService {
 
     public void update(Coordinator coordinator) {
         Coordinator prevCoordinator = coordinatorRepository.findCoordinatorById(coordinator.getId());
-        coordinator.setUser(prevCoordinator.getUser());
+        coordinator.setUser(new User(prevCoordinator.getUser().getId()));
+        coordinator.setDivision(new Division(coordinator.getDivision().getId()));
         coordinatorRepository.save(coordinator);
         logbookService.update(prevCoordinator, coordinator);
     }
@@ -70,7 +72,9 @@ public class CoordinatorService {
                 prevCoordinator.getLastname(), prevCoordinator.getUser(),
                 prevCoordinator.getDivision());
         coordinator.getUser().setEnabled(false);
+        coordinator.setDivision(new Division(coordinator.getDivision().getId()));
         userService.save(coordinator.getUser());
+        coordinator.setUser(new User(prevCoordinator.getUser().getId()));
         logbookService.update(prevCoordinator, coordinator);
         coordinatorRepository.save(coordinator);
     }

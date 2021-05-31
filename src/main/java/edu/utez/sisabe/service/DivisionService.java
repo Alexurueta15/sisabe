@@ -24,6 +24,10 @@ public class DivisionService {
         return divisionRepository.findAll();
     }
 
+    public Division findById(String id){
+        return divisionRepository.findDivisionById(id);
+    }
+
     public List<Division> findAllByEnabledTrue() {
         return divisionRepository.findAllByEnabledTrue();
     }

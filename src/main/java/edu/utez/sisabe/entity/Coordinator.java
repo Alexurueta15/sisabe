@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class Coordinator {
 
+
     public Coordinator(String id, String name, String lastname, User user, Division division) {
         this.id = id;
         this.name = name;

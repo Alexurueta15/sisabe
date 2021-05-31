@@ -35,15 +35,7 @@ public class CoordinatorDTO {
             groups = {UpdateCoordinator.class, CreateCoordinator.class})
     private DivisionDTO division;
 
-    private Boolean enabled;
-
-    public Coordinator cloneEntity(){
-        return new Coordinator(getId(), getName(), getLastname(), getUser().cloneEntity(),
-                getDivision().cloneEntity(), getEnabled());
-    }
-
-    public Coordinator cloneEntityWOUser(){
-        return new Coordinator(getId(), getName(), getLastname(),
-                getDivision().cloneEntity(), getEnabled());
-    }
+    public Coordinator cloneEntity() {
+        return new Coordinator(getId(), getName(), getLastname(), getUser() != null ? getUser().cloneEntity() : null,
+                getDivision().cloneEntity());
 }

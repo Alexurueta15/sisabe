@@ -104,8 +104,9 @@ public class AdministratorController {
         if (divisionService.findById(coordinatorDTO.getDivision().getId()).equals(null)
                 && divisionService.findById(coordinatorDTO.getDivision().getId()).getEnabled())
             return new ErrorMessage("División ingresada no existente");
-        coordinatorDTO.setEnabled(true);
-        coordinatorService.save(coordinatorDTO.cloneEntity());
+        Coordinator coordinator = coordinatorDTO.cloneEntity();
+        coordinator.getUser().setRole("Comité");
+        coordinatorService.save(coordinator);
         return new SuccessMessage("Coordinador registrado");
     }
 

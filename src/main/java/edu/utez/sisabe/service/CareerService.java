@@ -3,7 +3,6 @@ package edu.utez.sisabe.service;
 import edu.utez.sisabe.entity.Career;
 import edu.utez.sisabe.entity.Division;
 import edu.utez.sisabe.repository.CareerRepository;
-import edu.utez.sisabe.repository.DivisionRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

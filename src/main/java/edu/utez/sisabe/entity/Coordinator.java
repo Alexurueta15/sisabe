@@ -12,21 +12,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class Coordinator {
 
-    public Coordinator(String id, String name, String lastname, User user, Division division, Boolean enabled) {
+
+    public Coordinator(String id, String name, String lastname, User user, Division division) {
         this.id = id;
         this.name = name;
         this.lastname = lastname;
         this.user = user;
         this.division = division;
-        this.enabled = enabled;
-    }
-
-    public Coordinator(String id, String name, String lastname, Division division, Boolean enabled) {
-        this.id = id;
-        this.name = name;
-        this.lastname = lastname;
-        this.division = division;
-        this.enabled = enabled;
     }
 
     @Id
@@ -35,5 +27,4 @@ public class Coordinator {
     private String lastname;
     private User user;
     private Division division;
-    private Boolean enabled;
 }

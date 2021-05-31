@@ -2,13 +2,12 @@ package edu.utez.sisabe.jwt;
 
 import edu.utez.sisabe.entity.User;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,7 +21,16 @@ public class JwtTokenUtil implements Serializable {
 
     public static final long JWT_TOKEN_VALIDITY = (long) 5 * 60 * 60;
 
-    private final SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+    private final SecretKey key;
+
+    public JwtTokenUtil(@Value("${key.secret}")
+                                byte[] keySecret) {
+        this.key = new SecretKeySpec(keySecret, "HmacSHA512");
+        //toGenerate the secure byte array
+        //this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+        //get the byte array
+        //this.key.getEncoded();
+    }
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
@@ -33,7 +41,7 @@ public class JwtTokenUtil implements Serializable {
         if (claims != null) {
             return claims.get("role", String.class);
         }
-       return null;
+        return null;
     }
 
     public Date getExpirationDateFromToken(String token) {
@@ -63,7 +71,7 @@ public class JwtTokenUtil implements Serializable {
 
     public String generateToken(User user) {
         Map<String, String> claims = new HashMap<>();
-        claims.put("role", user.getRole().getRole());
+        claims.put("role", user.getRole());
 
         return Jwts.builder().setClaims(claims)
                 .setSubject(user.getUsername()).setIssuedAt(new Date(System.currentTimeMillis()))

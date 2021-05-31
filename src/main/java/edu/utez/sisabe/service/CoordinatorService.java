@@ -7,8 +7,6 @@ import edu.utez.sisabe.entity.User;
 import edu.utez.sisabe.repository.CoordinatorRepository;
 import edu.utez.sisabe.util.EmailService;
 import edu.utez.sisabe.util.PasswordGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -24,9 +22,6 @@ public class CoordinatorService {
     private final UserService userService;
 
     private final EmailService emailService;
-
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public CoordinatorService(CoordinatorRepository coordinatorRepository, LogbookService logbookService,
                               UserService userService, EmailService emailService) {
@@ -55,10 +50,9 @@ public class CoordinatorService {
     public void save(Coordinator coordinator) throws MessagingException {
         String passGenerated = PasswordGenerator.getPassword();
             coordinator.getUser().setPassword(passGenerated);
-            coordinator.getUser().setRole(new Role("Comité"));
-            User newUser = new User(userService.save(coordinator.getUser()).getId());
+            coordinator.getUser().setRole("Comité");
+            User newUser = userService.save(coordinator.getUser());
             coordinator.setUser(newUser);
-            coordinator.setDivision(new Division(coordinator.getDivision().getId()));
             coordinatorRepository.save(coordinator);
             logbookService.save(coordinator);
             emailService.sendEmail(coordinator.getUser().getUsername(), passGenerated);
@@ -76,8 +70,7 @@ public class CoordinatorService {
         Coordinator prevCoordinator = coordinatorRepository.findCoordinatorById(id);
         Coordinator coordinator = new Coordinator(prevCoordinator.getId(), prevCoordinator.getName(),
                 prevCoordinator.getLastname(), prevCoordinator.getUser(),
-                prevCoordinator.getDivision(), prevCoordinator.getEnabled());
-        coordinator.setEnabled(false);
+                prevCoordinator.getDivision());
         coordinator.getUser().setEnabled(false);
         coordinator.setDivision(new Division(coordinator.getDivision().getId()));
         userService.save(coordinator.getUser());

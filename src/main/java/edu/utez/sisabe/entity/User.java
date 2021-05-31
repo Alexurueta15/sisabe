@@ -1,6 +1,7 @@
 package edu.utez.sisabe.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -11,14 +12,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
-@Document(collection = "user")
+@Document
 @Getter
 @Setter
+@NoArgsConstructor
 public class User implements UserDetails {
-
-    public User() {
-        this.enabled = true;
-    }
 
     public User(String id, String username, String password) {
         this.id = id;
@@ -35,13 +33,13 @@ public class User implements UserDetails {
     private String id;
     private String username;
     private String password;
-    private Role role;
-    private boolean enabled;
+    private String role;
+    private Boolean enabled;
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(getRole().getRole()));
+        return Collections.singletonList(new SimpleGrantedAuthority(getRole()));
     }
 
     @Override

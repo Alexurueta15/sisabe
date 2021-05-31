@@ -98,8 +98,9 @@ public class AdministratorController {
     @PostMapping("/coordinator")
     public Object saveCoordinator(@Validated(CreateCoordinator.class) @RequestBody CoordinatorDTO coordinatorDTO)
             throws MessagingException {
-        coordinatorDTO.setEnabled(true);
-        coordinatorService.save(coordinatorDTO.cloneEntity());
+        Coordinator coordinator = coordinatorDTO.cloneEntity();
+        coordinator.getUser().setRole("Comité");
+        coordinatorService.save(coordinator);
         return new SuccessMessage("Coordinador registrado");
     }
 

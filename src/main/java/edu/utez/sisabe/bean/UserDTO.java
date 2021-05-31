@@ -5,7 +5,6 @@ import edu.utez.sisabe.util.group.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 @Getter

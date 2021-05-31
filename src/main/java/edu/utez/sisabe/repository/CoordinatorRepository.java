@@ -10,9 +10,14 @@ import java.util.List;
 
 @Repository
 public interface CoordinatorRepository extends MongoRepository<Coordinator, String> {
+    @Aggregation("{ $lookup: {from: 'division', localField: 'division._id', foreignField: '_id', as: 'division'} }," +
+            "{ $lookup: {from: 'user', localField: 'user._id', foreignField: '_id', as: 'user'} }")
+    List<Coordinator> findAll();
     Coordinator findCoordinatorById(String id);
-    @Aggregation("{ $lookup: {from: 'division', localField: 'division._id', foreignField: '_id', as: 'division'} }")
+    @Aggregation("{ $lookup: {from: 'division', localField: 'division._id', foreignField: '_id', as: 'division'} }," +
+            "{ $lookup: {from: 'user', localField: 'user._id', foreignField: '_id', as: 'user'} }")
     List<Coordinator> findAllByEnabledTrue();
-    @Aggregation("{ $lookup: {from: 'division', localField: 'division._id', foreignField: '_id', as: 'division'} }")
+    @Aggregation("{ $lookup: {from: 'division', localField: 'division._id', foreignField: '_id', as: 'division'} }," +
+            "{ $lookup: {from: 'user', localField: 'user._id', foreignField: '_id', as: 'user'} }")
     List<Coordinator> findAllByDivision(Division division);
 }

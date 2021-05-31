@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -25,7 +26,7 @@ public class DivisionDTO {
             groups = {CreateDivision.class, UpdateDivision.class})
     private String acronym;
 
-    @NotEmpty(message = "El estatus de la división no puede ser nulo",
+    @NotNull(message = "El estatus de la división no puede ser nulo",
             groups = {UpdateDivision.class})
     private Boolean enabled;
 

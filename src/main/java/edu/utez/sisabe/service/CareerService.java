@@ -3,7 +3,6 @@ package edu.utez.sisabe.service;
 import edu.utez.sisabe.entity.Career;
 import edu.utez.sisabe.entity.Division;
 import edu.utez.sisabe.repository.CareerRepository;
-import edu.utez.sisabe.repository.DivisionRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,7 +48,7 @@ public class CareerService {
 
     public void delete(String id) {
         Career prevCareer = careerRepository.findCareerById(id);
-        Career career = new Career(prevCareer.getId(), prevCareer.getName(),
+        Career career = new Career(prevCareer.getId(), prevCareer.getName(), prevCareer.getDegree(),
                 prevCareer.getDivision(), prevCareer.getEnabled());
         career.setEnabled(false);
         careerRepository.save(career);

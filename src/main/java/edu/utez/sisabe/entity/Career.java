@@ -12,9 +12,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class Career {
 
-    public Career(String id, String name, Division division, Boolean enabled) {
+    public Career(String id, String name, String degree, Division division, Boolean enabled) {
         this.id = id;
         this.name = name;
+        this.degree = degree;
         this.division = division;
         this.enabled = enabled;
     }
@@ -22,6 +23,7 @@ public class Career {
     @Id
     private String id;
     private String name;
+    private String degree;
     private Division division;
     private Boolean enabled;
 }

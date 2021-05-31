@@ -32,9 +32,11 @@ public class CareerDTO {
             groups = {CreateCareer.class, UpdateCareer.class})
     private DivisionDTO division;
 
+    @NotNull(message = "El estatus de la carrera no puede ser nulo",
+            groups = {UpdateCareer.class})
     private Boolean enabled;
 
-    public Career cloneEntity(){
-        return new Career(getId(), getName(), getDivision().cloneEntity(), getEnabled());
+    public Career cloneEntity() {
+        return new Career(getId(), getName(), getDegree(), getDivision().cloneEntity(), getEnabled());
     }
 }

@@ -1,17 +1,12 @@
 package edu.utez.sisabe.service;
 
-import edu.utez.sisabe.entity.Role;
 import edu.utez.sisabe.entity.User;
 import edu.utez.sisabe.repository.UserRepository;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -19,21 +14,18 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    private final RoleService roleService;
-
     private final LogbookService logbookService;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserService(UserRepository userRepository, RoleService roleService, LogbookService logbookService) {
+    public UserService(UserRepository userRepository, LogbookService logbookService) {
         this.userRepository = userRepository;
-        this.roleService = roleService;
         this.logbookService = logbookService;
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
-    public List<User> findAllByRole(Role role) {
-        return userRepository.findAllByRole(roleService.findByRole(role.getRole()));
+    public List<User> findAllByRole(String role) {
+        return userRepository.findAllByRole(role);
     }
 
     public User findUserByUsername(String username) {
@@ -46,8 +38,6 @@ public class UserService implements UserDetailsService {
 
 
     public User save(User user) {
-        Role userRole = roleService.findByRole(user.getRole().getRole());
-        user.setRole(userRole);
         logbookService.save(user);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return userRepository.save(user);

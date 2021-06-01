@@ -27,5 +27,4 @@ public class Career {
     private String degree;
     private Division division;
     private Boolean enabled;
-    private String degree;
 }

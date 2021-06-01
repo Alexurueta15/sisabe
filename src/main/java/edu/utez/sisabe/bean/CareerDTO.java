@@ -38,4 +38,5 @@ public class CareerDTO {
 
     public Career cloneEntity() {
         return new Career(getId(), getName(), getDegree(), getDivision().cloneEntity(), getEnabled());
+    }
 }

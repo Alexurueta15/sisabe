@@ -101,8 +101,7 @@ public class AdministratorController {
             throws MessagingException {
         if (userService.existsByUsername(coordinatorDTO.getUser().getUsername()))
             return new ErrorMessage("Usuario existente");
-        if (divisionService.findById(coordinatorDTO.getDivision().getId()).equals(null)
-                && divisionService.findById(coordinatorDTO.getDivision().getId()).getEnabled())
+        if (!divisionService.findById(coordinatorDTO.getDivision().getId()).getEnabled())
             return new ErrorMessage("División ingresada no existente");
         Coordinator coordinator = coordinatorDTO.cloneEntity();
         coordinator.getUser().setRole("Comité");
@@ -112,13 +111,13 @@ public class AdministratorController {
 
     @PutMapping("/coordinator")
     public Object UpdateCoordinator(@Validated(UpdateCoordinator.class) @RequestBody CoordinatorDTO coordinatorDTO) {
-        coordinatorService.update(coordinatorDTO.cloneEntityWOUser());
+        coordinatorService.update(coordinatorDTO.cloneEntity());
         return new SuccessMessage("Coordinador actualizado");
     }
 
     @DeleteMapping("/coordinator")
     public Object deleteCoordinator(@Validated(DeleteCoordinator.class) @RequestBody CoordinatorDTO coordinatorDTO) {
         coordinatorService.delete(coordinatorDTO.getId());
-        return new SuccessMessage("Coordinador inahabilitado");
+        return new SuccessMessage("Se ha cambiado el estatus del coordinador");
     }
 }

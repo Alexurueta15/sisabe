@@ -2,7 +2,6 @@ package edu.utez.sisabe.service;
 
 import edu.utez.sisabe.entity.Coordinator;
 import edu.utez.sisabe.entity.Division;
-import edu.utez.sisabe.entity.Role;
 import edu.utez.sisabe.entity.User;
 import edu.utez.sisabe.repository.CoordinatorRepository;
 import edu.utez.sisabe.util.EmailService;
@@ -35,7 +34,7 @@ public class CoordinatorService {
         return coordinatorRepository.findAll();
     }
 
-    public void saveAll(List<Coordinator> coordinators){
+    public void saveAll(List<Coordinator> coordinators) {
         coordinatorRepository.saveAll(coordinators);
     }
 
@@ -49,31 +48,31 @@ public class CoordinatorService {
 
     public void save(Coordinator coordinator) throws MessagingException {
         String passGenerated = PasswordGenerator.getPassword();
-            coordinator.getUser().setPassword(passGenerated);
-            coordinator.getUser().setRole("Comité");
-            User newUser = userService.save(coordinator.getUser());
-            coordinator.setUser(newUser);
-            coordinatorRepository.save(coordinator);
-            logbookService.save(coordinator);
-            emailService.sendEmail(coordinator.getUser().getUsername(), passGenerated);
+        coordinator.getUser().setPassword(passGenerated);
+        coordinator.getUser().setRole("Comité");
+        User newUser = userService.save(coordinator.getUser());
+        coordinator.setUser(newUser);
+        coordinatorRepository.save(coordinator);
+        logbookService.save(coordinator);
+        emailService.sendEmail(coordinator.getUser().getUsername(), passGenerated);
     }
 
     public void update(Coordinator coordinator) {
         Coordinator prevCoordinator = coordinatorRepository.findCoordinatorById(coordinator.getId());
-        coordinator.setUser(new User(prevCoordinator.getUser().getId()));
-        coordinator.setDivision(new Division(coordinator.getDivision().getId()));
+        coordinator.setUser(prevCoordinator.getUser());
         coordinatorRepository.save(coordinator);
         logbookService.update(prevCoordinator, coordinator);
     }
 
     public void delete(String id) {
         Coordinator prevCoordinator = coordinatorRepository.findCoordinatorById(id);
+        System.out.println(prevCoordinator);
         Coordinator coordinator = new Coordinator(prevCoordinator.getId(), prevCoordinator.getName(),
                 prevCoordinator.getLastname(), prevCoordinator.getUser(),
-                prevCoordinator.getDivision());
-        coordinator.getUser().setEnabled(false);
-        coordinator.setDivision(new Division(coordinator.getDivision().getId()));
-        userService.save(coordinator.getUser());
+                new Division(prevCoordinator.getDivision().getId()));
+        System.out.println(coordinator);
+        coordinator.getUser().setEnabled(!prevCoordinator.getUser().getEnabled());
+        userService.update(coordinator.getUser());
         coordinator.setUser(new User(prevCoordinator.getUser().getId()));
         logbookService.update(prevCoordinator, coordinator);
         coordinatorRepository.save(coordinator);

@@ -34,18 +34,6 @@ public class CoordinatorService {
         return coordinatorRepository.findAll();
     }
 
-    public void saveAll(List<Coordinator> coordinators) {
-        coordinatorRepository.saveAll(coordinators);
-    }
-
-    public List<Coordinator> findAllByDivision(Division division) {
-        return coordinatorRepository.findAllByDivision(division);
-    }
-
-    public List<Coordinator> findAllByEnabledTrue() {
-        return coordinatorRepository.findAllByEnabledTrue();
-    }
-
     public void save(Coordinator coordinator) throws MessagingException {
         String passGenerated = PasswordGenerator.getPassword();
         coordinator.getUser().setPassword(passGenerated);
@@ -66,11 +54,9 @@ public class CoordinatorService {
 
     public void delete(String id) {
         Coordinator prevCoordinator = coordinatorRepository.findCoordinatorById(id);
-        System.out.println(prevCoordinator);
         Coordinator coordinator = new Coordinator(prevCoordinator.getId(), prevCoordinator.getName(),
                 prevCoordinator.getLastname(), prevCoordinator.getUser(),
                 new Division(prevCoordinator.getDivision().getId()));
-        System.out.println(coordinator);
         coordinator.getUser().setEnabled(!prevCoordinator.getUser().getEnabled());
         userService.update(coordinator.getUser());
         coordinator.setUser(new User(prevCoordinator.getUser().getId()));

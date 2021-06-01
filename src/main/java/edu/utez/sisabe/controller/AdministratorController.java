@@ -57,14 +57,18 @@ public class AdministratorController {
 
     @PutMapping("/division")
     public Object UpdateDivision(@Validated(UpdateDivision.class) @RequestBody DivisionDTO divisionDTO) {
+        if (divisionService.findDivisionById(divisionDTO.getId())==null)
+            return new ErrorMessage("División ingresada no existente");
         divisionService.update(divisionDTO.cloneEntity());
         return new SuccessMessage("División actualizada");
     }
 
     @DeleteMapping("/division")
     public Object deleteDivision(@Validated(DeleteDivision.class) @RequestBody DivisionDTO divisionDTO) {
+        if (divisionService.findDivisionById(divisionDTO.getId())==null)
+            return new ErrorMessage("División ingresada no existente");
         divisionService.delete(divisionDTO.getId());
-        return new SuccessMessage("División inahabilitada");
+        return new SuccessMessage("Se ha cambiado el estatus de la división");
     }
 
     @GetMapping("/career")
@@ -81,14 +85,18 @@ public class AdministratorController {
 
     @PutMapping("/career")
     public Object UpdateCareer(@Validated(UpdateCareer.class) @RequestBody CareerDTO careerDTO) {
+        if (careerService.findCareerById(careerDTO.getId())==null)
+            return new ErrorMessage("Carrera ingresada no existente");
         careerService.update(careerDTO.cloneEntity());
         return new SuccessMessage("Carrera actualizada");
     }
 
     @DeleteMapping("/career")
     public Object deleteCareer(@Validated(DeleteCareer.class) @RequestBody CareerDTO careerDTO) {
+        if (careerService.findCareerById(careerDTO.getId())==null)
+            return new ErrorMessage("Carrera ingresada no existente");
         careerService.delete(careerDTO.getId());
-        return new SuccessMessage("Carrera inahabilitada");
+        return new SuccessMessage("Se ha cambiado el estatus de la carrera");
     }
 
     @GetMapping("/coordinator")
@@ -101,7 +109,7 @@ public class AdministratorController {
             throws MessagingException {
         if (userService.existsByUsername(coordinatorDTO.getUser().getUsername()))
             return new ErrorMessage("Usuario existente");
-        if (!divisionService.findById(coordinatorDTO.getDivision().getId()).getEnabled())
+        if (divisionService.findDivisionById(coordinatorDTO.getDivision().getId())==null)
             return new ErrorMessage("División ingresada no existente");
         Coordinator coordinator = coordinatorDTO.cloneEntity();
         coordinator.getUser().setRole("Comité");

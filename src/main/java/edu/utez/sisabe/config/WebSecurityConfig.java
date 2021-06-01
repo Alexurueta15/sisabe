@@ -80,6 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.cors();//añade los permisos para cors
         httpSecurity.csrf().disable()
                 .authorizeRequests().antMatchers(HttpMethod.POST, "/login").permitAll()
+                .antMatchers(HttpMethod.GET,"/public/**").permitAll()
                 .antMatchers("/admin/**").hasAuthority("Administrador")
                 .antMatchers("/alumno/**").hasAuthority("Alumno")
                 .antMatchers("/comite/**").hasAuthority("Comité")

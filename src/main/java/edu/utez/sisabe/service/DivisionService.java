@@ -24,7 +24,7 @@ public class DivisionService {
         return divisionRepository.findAll();
     }
 
-    public Division findById(String id){
+    public Division findDivisionById(String id){
         return divisionRepository.findDivisionById(id);
     }
 
@@ -47,7 +47,7 @@ public class DivisionService {
         Division prevDivision = divisionRepository.findDivisionById(id);
         Division division = new Division(prevDivision.getId(), prevDivision.getName(),
                 prevDivision.getAcronym(), prevDivision.getEnabled());
-        division.setEnabled(false);
+        division.setEnabled(!prevDivision.getEnabled());
         divisionRepository.save(division);
         logbookService.update(prevDivision, division);
     }

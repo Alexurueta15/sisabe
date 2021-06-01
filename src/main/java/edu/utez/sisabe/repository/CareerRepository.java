@@ -13,8 +13,6 @@ public interface CareerRepository extends MongoRepository<Career, String> {
     Career findCareerById(String id);
     @Aggregation("{ $lookup: {from: 'division', localField: 'division._id', foreignField: '_id', as: 'division'} }")
     List<Career> findAll();
-    @Aggregation("{ $lookup: {from: 'division', localField: 'division._id', foreignField: '_id', as: 'division'} }")
     List<Career> findAllByEnabledTrue();
-    @Aggregation("{ $lookup: {from: 'division', localField: 'division._id', foreignField: '_id', as: 'division'} }")
-    List<Career> findAllByDivision(Division division);
+    List<Career> findAllByEnabledTrueAndDivision_Id(String idDivision);
 }

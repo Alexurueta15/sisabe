@@ -27,23 +27,21 @@ public class CustomHandlerController {
 
     @ExceptionHandler(value = AccessDeniedException.class)
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
-    public ErrorMessage accessDenied(){
-        return new ErrorMessage("Forbidden");
+    public ErrorMessage accessDenied() {
+        return new ErrorMessage("Access denied");
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ListErrorMessage methodArgumentNotValidException(MethodArgumentNotValidException ex) {
         List<String> errorMessages = new ArrayList<>();
+        String errorMessage;
         for (FieldError fieldError : ex.getFieldErrors()) {
-            errorMessages.add(fieldError.getDefaultMessage());
+            errorMessage = fieldError.getField() + ": " + fieldError.getDefaultMessage();
+            errorMessages.add(errorMessage);
         }
-        return new ListErrorMessage(
-                HttpStatus.BAD_REQUEST.value(),
-                new Date(),
-                "Los argumentos no son válidos",
-                errorMessages
-        );
+        return new ListErrorMessage(HttpStatus.BAD_REQUEST.value(), new Date(),
+                "Los argumentos no son válidos", errorMessages);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -56,8 +54,7 @@ public class CustomHandlerController {
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorMessage globalExceptionHandler(Exception ex) {
         ex.printStackTrace();
-        return new ErrorMessage(
-                ex.getCause() == null ? "El servidor no añadió detalles" :
-                        ex.getCause().toString().split(":", 2)[1]);
+        return new ErrorMessage(ex.getCause() == null ? "El servidor no añadió detalles"
+                : ex.getCause().toString().split(":", 2)[1]);
     }
 }

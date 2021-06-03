@@ -22,6 +22,6 @@ public class Scholarship {
     private String id;
     private String name;
     private String description;
-    private String image; //Checar
+    private String image;
     private Boolean enabled;
 }

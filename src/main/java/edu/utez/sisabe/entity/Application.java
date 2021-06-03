@@ -16,17 +16,17 @@ public class Application {
 
     @Id
     private String id;
-    private Integer previousQuarter; //
-    private Integer currentQuarter; //
-    private Float grade; //
+    private Integer previousQuarter;
+    private Integer currentQuarter;
+    private Float grade;
     private String reason;
     private Announcement announcement;
-    private String gradeReport; //
-    private String birthCertificate; //
-    private List<String> birthCertificateChild; //
+    private String gradeReport;
+    private String birthCertificate;
+    private List<String> birthCertificateChild;
     private String activity;
-    private Boolean veredict; //
+    private Boolean verdict;
     private String comment;
-    private Integer discount; //
+    private Integer discount;
     private Coordinator coordinator;
 }

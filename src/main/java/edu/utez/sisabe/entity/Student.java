@@ -22,8 +22,8 @@ public class Student {
     private String lastname;
     private String curp;
     private String birthDate;
-    private Character gender; // Checar
-    private String nacionality;
+    private Character gender;
+    private String nationality;
     private Address address;
     private String phone;
     private String phoneHome;
@@ -31,6 +31,6 @@ public class Student {
     private Career career;
     private User user;
     private String shift;
-    private List<Application> applications; //Checar
+    private List<Application> applications;
 
 }

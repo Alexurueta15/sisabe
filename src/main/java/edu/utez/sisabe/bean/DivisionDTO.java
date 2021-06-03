@@ -12,22 +12,17 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class DivisionDTO {
 
-    @NotEmpty(message = "El identificador de la división no puede ser nulo",
-            groups = {CreateCareer.class, UpdateCareer.class,
-                    UpdateDivision.class, DeleteDivision.class,
+    @NotEmpty(groups = {CreateCareer.class, UpdateCareer.class, UpdateDivision.class, DeleteDivision.class,
                     UpdateCoordinator.class, CreateCoordinator.class})
     private String id;
 
-    @NotEmpty(message = "El nombre de la división no puede ser nulo",
-            groups = {CreateDivision.class, UpdateDivision.class})
+    @NotEmpty(groups = {CreateDivision.class, UpdateDivision.class})
     private String name;
 
-    @NotEmpty(message = "El acrónimo de la división no puede ser nulo",
-            groups = {CreateDivision.class, UpdateDivision.class})
+    @NotEmpty(groups = {CreateDivision.class, UpdateDivision.class})
     private String acronym;
 
-    @NotNull(message = "El estatus de la división no puede ser nulo",
-            groups = {UpdateDivision.class})
+    @NotNull(groups = {UpdateDivision.class})
     private Boolean enabled;
 
     public Division cloneEntity(){

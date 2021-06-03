@@ -12,12 +12,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document
-public class Career {
+public class Scholarship {
+
+    public Scholarship(String id) {
+        this.id = id;
+    }
 
     @Id
     private String id;
     private String name;
-    private String degree;
-    private Division division;
+    private String description;
+    private String image; //Checar
     private Boolean enabled;
 }

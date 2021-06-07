@@ -56,12 +56,12 @@ public class CoordinatorService {
     public void delete(String id) {
         Coordinator prevCoordinator = coordinatorRepository.findCoordinatorById(id);
         Coordinator coordinator = new Coordinator(prevCoordinator.getId(), prevCoordinator.getName(),
-                prevCoordinator.getLastname(), prevCoordinator.getUser(),
+                prevCoordinator.getLastname(), userService.findUserById(prevCoordinator.getUser().getId()),
                 new Division(prevCoordinator.getDivision().getId()));
-        coordinator.getUser().setEnabled(!prevCoordinator.getUser().getEnabled());
+        coordinator.getUser().setEnabled(!coordinator.getUser().getEnabled());
         userService.update(coordinator.getUser());
-        coordinator.setUser(new User(prevCoordinator.getUser().getId()));
         logbookService.update(prevCoordinator, coordinator);
+        coordinator.setUser(new User(coordinator.getUser().getId()));
         coordinatorRepository.save(coordinator);
     }
 }

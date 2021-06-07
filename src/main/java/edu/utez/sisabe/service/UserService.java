@@ -28,6 +28,10 @@ public class UserService implements UserDetailsService {
         return userRepository.findAllByRole(role);
     }
 
+    public User findUserById(String id) {
+        return userRepository.findUserById(id);
+    }
+
     public User findUserByUsername(String username) {
         return userRepository.findUserByUsername(username);
     }

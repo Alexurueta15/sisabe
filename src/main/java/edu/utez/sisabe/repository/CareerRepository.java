@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public interface CareerRepository extends MongoRepository<Career, String> {
+    boolean existsByName(String name);
     Career findCareerById(String id);
     @Aggregation("{ $lookup: {from: 'division', localField: 'division._id', foreignField: '_id', as: 'division'} }")
     List<Career> findAll();

@@ -19,6 +19,10 @@ public class CareerService {
         this.logbookService = logbookService;
     }
 
+    public boolean existsByName(String name){
+        return careerRepository.existsByName(name);
+    }
+
     public Career findCareerById(String id){
         return careerRepository.findCareerById(id);
     }
@@ -48,6 +52,8 @@ public class CareerService {
     public void update(Career career) {
         Career prevCareer = careerRepository.findCareerById(career.getId());
         career.setDivision(new Division(career.getDivision().getId()));
+        if (!prevCareer.getName().equals(career.getName()) && existsByName(career.getName()))
+            career.setName(prevCareer.getName());
         careerRepository.save(career);
         logbookService.update(prevCareer, career);
     }

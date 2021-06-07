@@ -50,6 +50,10 @@ public class AdministratorController {
 
     @PostMapping("/division")
     public Object saveDivision(@Validated(CreateDivision.class) @RequestBody DivisionDTO divisionDTO) {
+        if (divisionService.existsByAcronym(divisionDTO.getAcronym()))
+            return new ErrorMessage("El acrónimo de división ya existe");
+        if (divisionService.existsByName(divisionDTO.getName()))
+            return new ErrorMessage("El nombre de división ya existe");
         divisionDTO.setEnabled(true);
         divisionService.save(divisionDTO.cloneEntity());
         return new SuccessMessage("División registrada");
@@ -57,7 +61,7 @@ public class AdministratorController {
 
     @PutMapping("/division")
     public Object UpdateDivision(@Validated(UpdateDivision.class) @RequestBody DivisionDTO divisionDTO) {
-        if (divisionService.findDivisionById(divisionDTO.getId())==null)
+        if (divisionService.findDivisionById(divisionDTO.getId()) == null)
             return new ErrorMessage("División ingresada no existente");
         divisionService.update(divisionDTO.cloneEntity());
         return new SuccessMessage("División actualizada");
@@ -65,7 +69,7 @@ public class AdministratorController {
 
     @DeleteMapping("/division")
     public Object deleteDivision(@Validated(DeleteDivision.class) @RequestBody DivisionDTO divisionDTO) {
-        if (divisionService.findDivisionById(divisionDTO.getId())==null)
+        if (divisionService.findDivisionById(divisionDTO.getId()) == null)
             return new ErrorMessage("División ingresada no existente");
         divisionService.delete(divisionDTO.getId());
         return new SuccessMessage("Se ha cambiado el estatus de la división");
@@ -78,6 +82,8 @@ public class AdministratorController {
 
     @PostMapping("/career")
     public Object saveCareer(@Validated(CreateCareer.class) @RequestBody CareerDTO careerDTO) {
+        if (careerService.existsByName(careerDTO.getName()))
+            return new ErrorMessage("El nombre de carrera ya existe");
         careerDTO.setEnabled(true);
         careerService.save(careerDTO.cloneEntity());
         return new SuccessMessage("Carrera registrada");
@@ -85,7 +91,7 @@ public class AdministratorController {
 
     @PutMapping("/career")
     public Object UpdateCareer(@Validated(UpdateCareer.class) @RequestBody CareerDTO careerDTO) {
-        if (careerService.findCareerById(careerDTO.getId())==null)
+        if (careerService.findCareerById(careerDTO.getId()) == null)
             return new ErrorMessage("Carrera ingresada no existente");
         careerService.update(careerDTO.cloneEntity());
         return new SuccessMessage("Carrera actualizada");
@@ -93,7 +99,7 @@ public class AdministratorController {
 
     @DeleteMapping("/career")
     public Object deleteCareer(@Validated(DeleteCareer.class) @RequestBody CareerDTO careerDTO) {
-        if (careerService.findCareerById(careerDTO.getId())==null)
+        if (careerService.findCareerById(careerDTO.getId()) == null)
             return new ErrorMessage("Carrera ingresada no existente");
         careerService.delete(careerDTO.getId());
         return new SuccessMessage("Se ha cambiado el estatus de la carrera");
@@ -109,7 +115,7 @@ public class AdministratorController {
             throws MessagingException {
         if (userService.existsByUsername(coordinatorDTO.getUser().getUsername()))
             return new ErrorMessage("Usuario existente");
-        if (divisionService.findDivisionById(coordinatorDTO.getDivision().getId())==null)
+        if (divisionService.findDivisionById(coordinatorDTO.getDivision().getId()) == null)
             return new ErrorMessage("División ingresada no existente");
         Coordinator coordinator = coordinatorDTO.cloneEntity();
         coordinator.getUser().setRole("Comité");

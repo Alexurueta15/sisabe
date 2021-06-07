@@ -9,5 +9,7 @@ import java.util.List;
 @Repository
 public interface DivisionRepository extends MongoRepository<Division, String> {
     Division findDivisionById(String id);
+    boolean existsByAcronym(String acronym);
+    boolean existsByName(String name);
     List<Division> findAllByEnabledTrue();
 }

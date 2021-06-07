@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Getter
 public class ErrorMessage {
-    private final int statusCode = HttpStatus.OK.value();
+    private final int statusCode = HttpStatus.BAD_REQUEST.value();
     private final Date timestamp = new Date();
     private final String message = "Operación fallida";
     private final String description;

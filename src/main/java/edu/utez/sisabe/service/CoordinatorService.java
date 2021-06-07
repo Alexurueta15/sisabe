@@ -48,6 +48,7 @@ public class CoordinatorService {
     public void update(Coordinator coordinator) {
         Coordinator prevCoordinator = coordinatorRepository.findCoordinatorById(coordinator.getId());
         coordinator.setUser(prevCoordinator.getUser());
+        coordinator.setDivision(new Division(coordinator.getDivision().getId()));
         coordinatorRepository.save(coordinator);
         logbookService.update(prevCoordinator, coordinator);
     }

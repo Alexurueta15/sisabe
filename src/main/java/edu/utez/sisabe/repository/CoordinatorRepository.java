@@ -10,8 +10,6 @@ import java.util.List;
 
 @Repository
 public interface CoordinatorRepository extends MongoRepository<Coordinator, String> {
-    @Aggregation(value = {"{$lookup: {from: 'division', localField: 'division._id', foreignField: '_id', as: 'division'}}",
-            "{$lookup: {from: 'user', localField: 'user._id', foreignField: '_id', as: 'user'}}"})
     Coordinator findCoordinatorById(String id);
     @Aggregation(value = {"{$lookup: {from: 'division', localField: 'division._id', foreignField: '_id', as: 'division'}}",
             "{$lookup: {from: 'user', localField: 'user._id', foreignField: '_id', as: 'user'}}"})

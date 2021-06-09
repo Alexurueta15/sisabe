@@ -31,6 +31,5 @@ public class Student {
     private Career career;
     private User user;
     private String shift;
-    private List<Application> applications;
 
 }

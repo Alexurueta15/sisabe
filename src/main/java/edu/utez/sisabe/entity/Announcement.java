@@ -1,5 +1,6 @@
 package edu.utez.sisabe.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.sql.Date;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Document
 public class Announcement {
 
@@ -20,5 +22,5 @@ public class Announcement {
     private Date startDate;
     private Date finalDate;
     private Scholarship scholarship;
-    private boolean enabled;
+    private Boolean enabled;
 }

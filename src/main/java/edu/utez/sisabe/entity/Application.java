@@ -29,4 +29,6 @@ public class Application {
     private String comment;
     private Integer discount;
     private Coordinator coordinator;
+    private Student student;
+    private Division division;
 }

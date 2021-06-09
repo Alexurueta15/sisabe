@@ -1,10 +1,7 @@
 package edu.utez.sisabe.controller;
 
 import edu.utez.sisabe.bean.*;
-import edu.utez.sisabe.entity.Career;
-import edu.utez.sisabe.entity.Coordinator;
-import edu.utez.sisabe.entity.Division;
-import edu.utez.sisabe.entity.Logbook;
+import edu.utez.sisabe.entity.*;
 import edu.utez.sisabe.service.*;
 import edu.utez.sisabe.util.group.*;
 import org.springframework.validation.annotation.Validated;
@@ -27,15 +24,17 @@ public class AdministratorController {
 
     private final UserService userService;
 
+    private final ScholarshipService scholarshipService;
 
     public AdministratorController(DivisionService divisionService, CareerService careerService,
                                    CoordinatorService coordinatorService, LogbookService logbookService,
-                                   UserService userService) {
+                                   UserService userService, ScholarshipService scholarshipService) {
         this.divisionService = divisionService;
         this.careerService = careerService;
         this.coordinatorService = coordinatorService;
         this.logbookService = logbookService;
         this.userService = userService;
+        this.scholarshipService = scholarshipService;
     }
 
     @GetMapping("/logbook")
@@ -119,5 +118,36 @@ public class AdministratorController {
     public Object deleteCoordinator(@Validated(DeleteCoordinator.class) @RequestBody CoordinatorDTO coordinatorDTO) {
         coordinatorService.delete(coordinatorDTO.getId());
         return new SuccessMessage("Se ha cambiado el estatus del coordinador");
+    }
+
+    @GetMapping("/scholarship")
+    public List<Scholarship> findAllSholarship (){
+        return scholarshipService.findAll();
+    }
+
+    @PostMapping("/scholarship")
+    public Object saveScholarship (@Validated(CreateScholarship.class) @RequestBody ScholarshipDTO scholarshipDTO){
+        Scholarship scholarship = scholarshipDTO.cloneEntity();
+        scholarship.setEnabled(true);
+        if (scholarshipService.save(scholarship))
+            return new SuccessMessage("Beca registrada");
+        else
+            return new ErrorMessage("Beca no registrada");
+    }
+
+    @PutMapping("/scholarship")
+    public Object updateScholarship (@Validated(UpdateScholarship.class) @RequestBody ScholarshipDTO scholarshipDTO){
+
+        if (!scholarshipService.existById(scholarshipDTO.getId()))
+            return new ErrorMessage("No existe beca registrada");
+        Scholarship scholarship = scholarshipDTO.cloneEntity();
+        scholarshipService.update(scholarship);
+        return new SuccessMessage("Beca actualizada");
+    }
+
+    @DeleteMapping("/scholarship")
+    public Object deleteScholarship(@Validated(DeleteScholarship.class) @RequestBody ScholarshipDTO scholarshipDTO) {
+        scholarshipService.delete(scholarshipDTO.getId());
+        return new SuccessMessage("Se ha cambiado el estatus de la beca");
     }
 }

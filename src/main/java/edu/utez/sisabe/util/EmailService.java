@@ -24,6 +24,6 @@ public class EmailService {
        helper.setTo(to);
        helper.setSubject("SISABE");
        helper.setText("Bienvenido al sistema SISABE, para ingresar use la contraseña: " + content);
-       mailSender.send(message);
+       new Thread(() -> mailSender.send(message)).start();
     }
 }

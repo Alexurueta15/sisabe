@@ -15,25 +15,19 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class CareerDTO {
 
-    @NotEmpty(message = "El identificador de la carrera no puede ser nulo",
-            groups = {UpdateCareer.class, DeleteCareer.class})
+    @NotEmpty(groups = {UpdateCareer.class, DeleteCareer.class})
     private String id;
 
-    @NotEmpty(message = "El nombre de la carrera no puede ser nulo",
-            groups = {CreateCareer.class, UpdateCareer.class})
+    @NotEmpty(groups = {CreateCareer.class, UpdateCareer.class})
     private String name;
 
-    @NotEmpty(message = "El nombre del nivel académico no puede ser nulo",
-            groups = {CreateCareer.class, UpdateCareer.class})
+    @NotEmpty(groups = {CreateCareer.class, UpdateCareer.class})
     private String degree;
 
-    @Valid
-    @NotNull(message = "Se necesitan datos de la División Académica",
-            groups = {CreateCareer.class, UpdateCareer.class})
+    @Valid @NotNull(groups = {CreateCareer.class, UpdateCareer.class})
     private DivisionDTO division;
 
-    @NotNull(message = "El estatus de la carrera no puede ser nulo",
-            groups = {UpdateCareer.class})
+    @NotNull(groups = {UpdateCareer.class})
     private Boolean enabled;
 
     public Career cloneEntity() {

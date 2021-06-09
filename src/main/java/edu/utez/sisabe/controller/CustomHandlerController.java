@@ -7,17 +7,25 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.mail.MethodNotSupportedException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @RestControllerAdvice
 public class CustomHandlerController {
+
+    @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ErrorMessage methodNotFoundException() {
+        return new ErrorMessage("Recurso no encontrado, revisa tu dirección y tipo de solicitud");
+    }
 
     @ExceptionHandler(value = {UsernameNotFoundException.class})
     @ResponseStatus(value = HttpStatus.NOT_FOUND)

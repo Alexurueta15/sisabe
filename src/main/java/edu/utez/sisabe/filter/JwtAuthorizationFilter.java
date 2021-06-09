@@ -9,6 +9,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -39,6 +41,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         } else {
             loggerMessage.warn("JWT Token does not begin with Bearer String");
+            if (!request.getMethod().equals("GET")) {
+                UsernamePasswordAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken(null, null, null);
+                authenticationToken.setDetails(new Logbook("anonymous", request.getRequestURI(),
+                        request.getRemoteAddr(), request.getMethod()));
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
         }
         chain.doFilter(request, response);
     }

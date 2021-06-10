@@ -2,12 +2,14 @@ package edu.utez.sisabe.service;
 
 import edu.utez.sisabe.entity.User;
 import edu.utez.sisabe.repository.UserRepository;
+import edu.utez.sisabe.util.EmailService;
+import edu.utez.sisabe.util.PasswordGenerator;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import javax.mail.MessagingException;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -18,18 +20,19 @@ public class UserService implements UserDetailsService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserService(UserRepository userRepository, LogbookService logbookService) {
+    private final EmailService emailService;
+
+    public UserService(UserRepository userRepository, LogbookService logbookService,
+                       BCryptPasswordEncoder bCryptPasswordEncoder, EmailService emailService) {
         this.userRepository = userRepository;
         this.logbookService = logbookService;
-        this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.emailService = emailService;
     }
 
-    public List<User> findAllByRole(String role) {
-        return userRepository.findAllByRole(role);
-    }
 
-    public User findUserByUsername(String username) {
-        return userRepository.findUserByUsername(username);
+    public User findUserById(String id) {
+        return userRepository.findUserById(id);
     }
 
     public boolean existsByUsername(String username) {
@@ -43,26 +46,18 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public User update(User user){
-        return userRepository.save(user);
-    }
+    public void update(User user) { userRepository.save(user); }
 
-    public void updatePassword(User user) {
-        User userAux = userRepository.findUserById(user.getId());
-        if (userAux != null) {
-            user.setRole(userAux.getRole());
-            user.setUsername(userAux.getUsername());
-            logbookService.update(userAux, user);
-            userAux.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-            userRepository.save(userAux);
-        }
+    public void updatePassword(User user) throws MessagingException {
+        User userAux = userRepository.findUserByUsername(user.getUsername());
+        user = new User(userAux.getId(), userAux.getUsername(), userAux.getPassword(), userAux.getRole(),
+                userAux.getEnabled());
+        userAux.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        logbookService.update(userAux, user);
+        userRepository.save(userAux);
+        String passGenerated = PasswordGenerator.getPassword();
+        emailService.sendEmail(user.getUsername(), passGenerated);
     }
-
-    public void delete(User user) {
-        logbookService.delete(userRepository.findUserById(user.getId()));
-        userRepository.delete(user);
-    }
-
 
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {

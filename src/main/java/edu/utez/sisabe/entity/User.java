@@ -1,5 +1,6 @@
 package edu.utez.sisabe.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +17,7 @@ import java.util.Collections;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class User implements UserDetails {
 
     public User(String id, String username, String password) {

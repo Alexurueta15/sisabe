@@ -1,7 +1,5 @@
 package edu.utez.sisabe.service;
 
-import edu.utez.sisabe.entity.Career;
-import edu.utez.sisabe.entity.Coordinator;
 import edu.utez.sisabe.entity.Division;
 import edu.utez.sisabe.repository.DivisionRepository;
 import org.springframework.stereotype.Service;
@@ -20,11 +18,19 @@ public class DivisionService {
         this.logbookService = logbookService;
     }
 
+    public boolean existsByAcronym(String acronym) {
+        return divisionRepository.existsByAcronym(acronym);
+    }
+
+    public boolean existsByName(String name) {
+        return divisionRepository.existsByName(name);
+    }
+
     public List<Division> findAll() {
         return divisionRepository.findAll();
     }
 
-    public Division findById(String id){
+    public Division findDivisionById(String id) {
         return divisionRepository.findDivisionById(id);
     }
 
@@ -39,6 +45,10 @@ public class DivisionService {
 
     public void update(Division division) {
         Division prevDivision = divisionRepository.findDivisionById(division.getId());
+        if (!prevDivision.getAcronym().equals(division.getAcronym()) && existsByAcronym(division.getAcronym()))
+            division.setAcronym(prevDivision.getAcronym());
+        if (!prevDivision.getName().equals(division.getName()) && existsByName(division.getName()))
+            division.setName(prevDivision.getName());
         divisionRepository.save(division);
         logbookService.update(prevDivision, division);
     }
@@ -47,7 +57,7 @@ public class DivisionService {
         Division prevDivision = divisionRepository.findDivisionById(id);
         Division division = new Division(prevDivision.getId(), prevDivision.getName(),
                 prevDivision.getAcronym(), prevDivision.getEnabled());
-        division.setEnabled(false);
+        division.setEnabled(!prevDivision.getEnabled());
         divisionRepository.save(division);
         logbookService.update(prevDivision, division);
     }

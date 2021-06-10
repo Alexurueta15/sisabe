@@ -34,18 +34,6 @@ public class CoordinatorService {
         return coordinatorRepository.findAll();
     }
 
-    public void saveAll(List<Coordinator> coordinators) {
-        coordinatorRepository.saveAll(coordinators);
-    }
-
-    public List<Coordinator> findAllByDivision(Division division) {
-        return coordinatorRepository.findAllByDivision(division);
-    }
-
-    public List<Coordinator> findAllByEnabledTrue() {
-        return coordinatorRepository.findAllByEnabledTrue();
-    }
-
     public void save(Coordinator coordinator) throws MessagingException {
         String passGenerated = PasswordGenerator.getPassword();
         coordinator.getUser().setPassword(passGenerated);
@@ -60,21 +48,20 @@ public class CoordinatorService {
     public void update(Coordinator coordinator) {
         Coordinator prevCoordinator = coordinatorRepository.findCoordinatorById(coordinator.getId());
         coordinator.setUser(prevCoordinator.getUser());
+        coordinator.setDivision(new Division(coordinator.getDivision().getId()));
         coordinatorRepository.save(coordinator);
         logbookService.update(prevCoordinator, coordinator);
     }
 
     public void delete(String id) {
         Coordinator prevCoordinator = coordinatorRepository.findCoordinatorById(id);
-        System.out.println(prevCoordinator);
         Coordinator coordinator = new Coordinator(prevCoordinator.getId(), prevCoordinator.getName(),
-                prevCoordinator.getLastname(), prevCoordinator.getUser(),
+                prevCoordinator.getLastname(), userService.findUserById(prevCoordinator.getUser().getId()),
                 new Division(prevCoordinator.getDivision().getId()));
-        System.out.println(coordinator);
-        coordinator.getUser().setEnabled(!prevCoordinator.getUser().getEnabled());
+        coordinator.getUser().setEnabled(!coordinator.getUser().getEnabled());
         userService.update(coordinator.getUser());
-        coordinator.setUser(new User(prevCoordinator.getUser().getId()));
         logbookService.update(prevCoordinator, coordinator);
+        coordinator.setUser(new User(coordinator.getUser().getId()));
         coordinatorRepository.save(coordinator);
     }
 }

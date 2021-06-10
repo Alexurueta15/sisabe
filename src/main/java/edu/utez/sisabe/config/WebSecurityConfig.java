@@ -8,7 +8,6 @@ import edu.utez.sisabe.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -23,7 +22,7 @@ import org.springframework.web.filter.CorsFilter;
 import javax.annotation.PostConstruct;
 
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenUtil jwtTokenUtil;
@@ -32,14 +31,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     private JwtAuthorizationFilter jwtAuthorizationFilter;
 
-    @Bean
-    BCryptPasswordEncoder bCryptPasswordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     public CorsFilter corsFilter() {
@@ -55,10 +52,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     public WebSecurityConfig(JwtTokenUtil jwtTokenUtil, UserService userService,
-                             JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint){
+                             JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+                             BCryptPasswordEncoder bCryptPasswordEncoder){
         this.jwtTokenUtil = jwtTokenUtil;
         this.userService = userService;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @PostConstruct
@@ -71,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder builder) throws Exception {
-        builder.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder());
+        builder.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
     }
 
 
@@ -80,6 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.cors();//añade los permisos para cors
         httpSecurity.csrf().disable()
                 .authorizeRequests().antMatchers(HttpMethod.POST, "/login").permitAll()
+                .antMatchers("/public/**").permitAll()
                 .antMatchers("/admin/**").hasAuthority("Administrador")
                 .antMatchers("/alumno/**").hasAuthority("Alumno")
                 .antMatchers("/comite/**").hasAuthority("Comité")

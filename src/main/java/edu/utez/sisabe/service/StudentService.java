@@ -1,5 +1,6 @@
 package edu.utez.sisabe.service;
 
+import edu.utez.sisabe.entity.Career;
 import edu.utez.sisabe.entity.Student;
 import edu.utez.sisabe.entity.User;
 import edu.utez.sisabe.repository.StudentRepository;
@@ -38,11 +39,22 @@ public class StudentService {
 
     public void update (Student student){
         Student prevStudent = studentRepository.findStudentById(student.getId());
-        Student newStudent = new Student(prevStudent.getId(), prevStudent.getName(), prevStudent.getLastname(),
+        student.setUser(new User(prevStudent.getUser().getId()));
+        student.setCareer(new Career(student.getCareer().getId()));
+        studentRepository.save(student);
+        logbookService.update(prevStudent,student);
+    }
+
+    public void delete (String id){
+        Student prevStudent = studentRepository.findStudentById(id);
+        Student student = new Student(prevStudent.getId(), prevStudent.getName(), prevStudent.getLastname(),
                 prevStudent.getCurp(), prevStudent.getBirthDate(), prevStudent.getGender(),
-                prevStudent.getNationality(), prevStudent.getAddress(),prevStudent.getPhone(),
+                prevStudent.getNationality(), prevStudent.getAddress(), prevStudent.getPhone(),
                 prevStudent.getPhoneHome(), prevStudent.getEnrollment(), prevStudent.getCareer(),
-                prevStudent.getUser(), prevStudent.getShift());
+                userService.findUserById(prevStudent.getUser().getId()), prevStudent.getShift());
+        student.getUser().setEnabled(!student.getUser().getEnabled());
+        userService.update(student.getUser());
+        logbookService.update(prevStudent,student);
     }
 
     public boolean existById(String id){

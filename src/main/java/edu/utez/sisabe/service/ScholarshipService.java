@@ -13,44 +13,44 @@ public class ScholarshipService {
 
     private final ScholarshipRepository scholarshipRepository;
 
-    public ScholarshipService(LogbookService logbookService, ScholarshipRepository scholarshipRepository){
+    public ScholarshipService(LogbookService logbookService, ScholarshipRepository scholarshipRepository) {
         this.logbookService = logbookService;
         this.scholarshipRepository = scholarshipRepository;
     }
 
-    public List<Scholarship> findAll(){
+    public List<Scholarship> findAll() {
         return scholarshipRepository.findAll();
     }
 
-    public List<Scholarship> findAllByEnabledTrue(){
+    public List<Scholarship> findAllByEnabledTrue() {
         return scholarshipRepository.findAllByEnabledTrue();
     }
 
-    public boolean save (Scholarship scholarship){
+    public boolean save(Scholarship scholarship) {
         scholarship = scholarshipRepository.save(scholarship);
         logbookService.save(scholarship);
         return existById(scholarship.getId());
     }
 
-    public void update (Scholarship scholarship){
+    public void update(Scholarship scholarship) {
         Scholarship prevScholarship = scholarshipRepository.findScholarshipById(scholarship.getId());
         scholarship.setEnabled(prevScholarship.getEnabled());
         if (scholarship.getImage() == null)
             scholarship.setImage(prevScholarship.getImage());
         scholarshipRepository.save(scholarship);
-        logbookService.update(prevScholarship,scholarship);
+        logbookService.update(prevScholarship, scholarship);
     }
 
-    public void delete (String id){
+    public void delete(String id) {
         Scholarship prevScholarship = scholarshipRepository.findScholarshipById(id);
         Scholarship newScholarship = new Scholarship(prevScholarship.getId(), prevScholarship.getName(),
-                prevScholarship.getDescription(), prevScholarship.getImage(),prevScholarship.getEnabled());
-        newScholarship.setEnabled(false);
+                prevScholarship.getDescription(), prevScholarship.getImage(), !prevScholarship.getEnabled());
+
         scholarshipRepository.save(newScholarship);
-        logbookService.update(prevScholarship,newScholarship);
+        logbookService.update(prevScholarship, newScholarship);
     }
 
-    public boolean existById(String id){
+    public boolean existById(String id) {
         return scholarshipRepository.existsById(id);
     }
 }

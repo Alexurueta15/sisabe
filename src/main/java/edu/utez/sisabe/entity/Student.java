@@ -22,7 +22,7 @@ public class Student {
     private String lastname;
     private String curp;
     private String birthDate;
-    private Character gender;
+    private String gender;
     private String nationality;
     private Address address;
     private String phone;

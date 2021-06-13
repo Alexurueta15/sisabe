@@ -26,15 +26,19 @@ public class AdministratorController {
 
     private final ScholarshipService scholarshipService;
 
+    private final StudentService studentService;
+
     public AdministratorController(DivisionService divisionService, CareerService careerService,
                                    CoordinatorService coordinatorService, LogbookService logbookService,
-                                   UserService userService, ScholarshipService scholarshipService) {
+                                   UserService userService, ScholarshipService scholarshipService,
+                                   StudentService studentService) {
         this.divisionService = divisionService;
         this.careerService = careerService;
         this.coordinatorService = coordinatorService;
         this.logbookService = logbookService;
         this.userService = userService;
         this.scholarshipService = scholarshipService;
+        this.studentService = studentService;
     }
 
     @GetMapping("/logbook")
@@ -135,12 +139,12 @@ public class AdministratorController {
     }
 
     @GetMapping("/scholarship")
-    public List<Scholarship> findAllSholarship (){
+    public List<Scholarship> findAllSholarship() {
         return scholarshipService.findAll();
     }
 
     @PostMapping("/scholarship")
-    public Object saveScholarship (@Validated(CreateScholarship.class) @RequestBody ScholarshipDTO scholarshipDTO){
+    public Object saveScholarship(@Validated(CreateScholarship.class) @RequestBody ScholarshipDTO scholarshipDTO) {
         Scholarship scholarship = scholarshipDTO.cloneEntity();
         scholarship.setEnabled(true);
         if (scholarshipService.save(scholarship))
@@ -150,18 +154,32 @@ public class AdministratorController {
     }
 
     @PutMapping("/scholarship")
-    public Object updateScholarship (@Validated(UpdateScholarship.class) @RequestBody ScholarshipDTO scholarshipDTO){
-
+    public Object updateScholarship(@Validated(UpdateScholarship.class) @RequestBody ScholarshipDTO scholarshipDTO) {
         if (!scholarshipService.existById(scholarshipDTO.getId()))
             return new ErrorMessage("No existe beca registrada");
-        Scholarship scholarship = scholarshipDTO.cloneEntity();
-        scholarshipService.update(scholarship);
+        scholarshipService.update(scholarshipDTO.cloneEntity());
         return new SuccessMessage("Beca actualizada");
     }
 
     @DeleteMapping("/scholarship")
     public Object deleteScholarship(@Validated(DeleteScholarship.class) @RequestBody ScholarshipDTO scholarshipDTO) {
+        if (!scholarshipService.existById(scholarshipDTO.getId()))
+            return new ErrorMessage("No existe beca registrada");
         scholarshipService.delete(scholarshipDTO.getId());
         return new SuccessMessage("Se ha cambiado el estatus de la beca");
     }
+
+    @GetMapping("/student")
+    public List<Student> findAllStudent(){
+        return studentService.findAll();
+    }
+
+    @DeleteMapping("/student")
+    public Object deleteStudent(@Validated(DeleteStudent.class) @RequestBody StudentDTO studentDTO){
+        if (!studentService.existById(studentDTO.getId()))
+            return new ErrorMessage("No existe estudiante registrado");
+        studentService.delete(studentDTO.getId());
+        return new SuccessMessage("Se ha cambiado el estado del estudiante");
+    }
+
 }

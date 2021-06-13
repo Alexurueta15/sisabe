@@ -13,20 +13,16 @@ import javax.validation.constraints.NotEmpty;
 @Setter
 public class ScholarshipDTO {
 
-    @NotEmpty(message = "El identificador no puede ser nulo",
-            groups = {UpdateScholarship.class, DeleteScholarship.class})
+    @NotEmpty(groups = {UpdateScholarship.class, DeleteScholarship.class})
     private String id;
 
-    @NotEmpty(message = "El nombre de la beca no puede ser nulo",
-            groups = {UpdateScholarship.class, CreateScholarship.class})
+    @NotEmpty(groups = {UpdateScholarship.class, CreateScholarship.class})
     private String name;
 
-    @NotEmpty(message = "La descripción de la beca no puede ser nula",
-            groups = {UpdateScholarship.class, CreateScholarship.class})
+    @NotEmpty(groups = {UpdateScholarship.class, CreateScholarship.class})
     private String description;
 
-    @NotEmpty(message = "La imagen no puede ser nula",
-            groups = {CreateScholarship.class})
+    @NotEmpty(groups = {CreateScholarship.class})
     private String image;
 
     private Boolean enabled;

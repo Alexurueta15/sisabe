@@ -14,6 +14,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class Career {
 
+    public Career(String id){
+        this.id = id;
+    }
+
     @Id
     private String id;
     private String name;

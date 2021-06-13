@@ -40,10 +40,8 @@ public class AnnouncementService {
     public void delete (String id){
         Announcement prevAnnouncement = annoucementRepository.findAnnouncementById(id);
         Announcement newAnnouncement = new Announcement(prevAnnouncement.getId(), prevAnnouncement.getPeriod(),
-                prevAnnouncement.getStartDate(), prevAnnouncement.getFinalDate(), prevAnnouncement.getScholarship(),
-                prevAnnouncement.getEnabled());
-        newAnnouncement.setScholarship(new Scholarship(newAnnouncement.getScholarship().getId()));
-        newAnnouncement.setEnabled(false);
+                prevAnnouncement.getStartDate(), prevAnnouncement.getFinalDate(), new Scholarship(prevAnnouncement.getScholarship().getId()),
+                !prevAnnouncement.getEnabled());
 
         annoucementRepository.save(newAnnouncement);
         logbookService.update(prevAnnouncement,newAnnouncement);

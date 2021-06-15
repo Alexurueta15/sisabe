@@ -1,13 +1,17 @@
 package edu.utez.sisabe.controller;
 
 import edu.utez.sisabe.bean.ErrorMessage;
+import edu.utez.sisabe.bean.StudentDTO;
 import edu.utez.sisabe.bean.SuccessMessage;
 import edu.utez.sisabe.bean.UserDTO;
 import edu.utez.sisabe.entity.Career;
 import edu.utez.sisabe.entity.Division;
+import edu.utez.sisabe.entity.Student;
 import edu.utez.sisabe.service.CareerService;
 import edu.utez.sisabe.service.DivisionService;
+import edu.utez.sisabe.service.StudentService;
 import edu.utez.sisabe.service.UserService;
+import edu.utez.sisabe.util.group.CreateStudent;
 import edu.utez.sisabe.util.group.CreateUser;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -26,10 +30,14 @@ public class PublicController {
 
     private final UserService userService;
 
-    public PublicController(DivisionService divisionService, CareerService careerService, UserService userService) {
+    private final StudentService studentService;
+
+    public PublicController(DivisionService divisionService, CareerService careerService,
+                            UserService userService, StudentService studentService) {
         this.divisionService = divisionService;
         this.careerService = careerService;
         this.userService = userService;
+        this.studentService = studentService;
     }
 
     @PutMapping("/user")
@@ -57,5 +65,17 @@ public class PublicController {
         if (divisionService.findDivisionById(idDivision) == null)
             return new ErrorMessage("División ingresada no existente");
         return careerService.findAllByEnabledTrueAndDivision_id(idDivision);
+    }
+
+    @PostMapping("/student")
+    public Object saveStudent(@Validated(CreateStudent.class) @RequestBody StudentDTO studentDTO){
+        if (userService.existsByUsername(studentDTO.getUser().getUsername()))
+            return new ErrorMessage("Usuario existente");
+        if (careerService.findCareerById(studentDTO.getCareer().getId()) == null)
+            return new ErrorMessage("Carrera ingresada no existente");
+        if (studentService.save(studentDTO.cloneEntity()))
+            return new SuccessMessage("Estudiente registrado");
+        else
+            return new ErrorMessage("Estudiante no registrado");
     }
 }

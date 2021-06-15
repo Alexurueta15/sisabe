@@ -12,16 +12,24 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document
-public class Career {
+public class Scholarship {
 
-    public Career(String id){
+    public Scholarship(String id) {
         this.id = id;
+    }
+
+    public Scholarship(String id, String name, String description, String image) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.image = image;
+        this.enabled=true;
     }
 
     @Id
     private String id;
     private String name;
-    private String degree;
-    private Division division;
+    private String description;
+    private String image;
     private Boolean enabled;
 }

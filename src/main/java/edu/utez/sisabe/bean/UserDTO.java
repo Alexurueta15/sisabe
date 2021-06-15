@@ -11,13 +11,14 @@ import javax.validation.constraints.*;
 @Setter
 public class UserDTO {
 
-    @NotEmpty(groups = {UpdateUser.class, DeleteUser.class, UpdateCoordinator.class})
+    @NotEmpty(groups = {UpdateUser.class, DeleteUser.class, UpdateCoordinator.class, UpdateStudent.class})
     private String id;
 
-    @Email(groups = {UpdateUser.class, CreateUser.class, CreateCoordinator.class})
-    @NotEmpty(groups = {UpdateUser.class, CreateUser.class, CreateCoordinator.class})
+    @Email(groups = {UpdateUser.class, CreateUser.class, CreateCoordinator.class, CreateStudent.class})
+    @NotEmpty(groups = {UpdateUser.class, CreateUser.class, CreateCoordinator.class, CreateStudent.class})
     private String username;
 
+    @NotEmpty(groups = {CreateStudent.class})
     private String password;
 
     public User cloneEntity() {

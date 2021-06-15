@@ -1,9 +1,7 @@
 package edu.utez.sisabe.bean;
 
 import edu.utez.sisabe.entity.Career;
-import edu.utez.sisabe.util.group.CreateCareer;
-import edu.utez.sisabe.util.group.DeleteCareer;
-import edu.utez.sisabe.util.group.UpdateCareer;
+import edu.utez.sisabe.util.group.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class CareerDTO {
 
-    @NotEmpty(groups = {UpdateCareer.class, DeleteCareer.class})
+    @NotEmpty(groups = {UpdateCareer.class, DeleteCareer.class, CreateStudent.class, UpdateStudent.class})
     private String id;
 
     @NotEmpty(groups = {CreateCareer.class, UpdateCareer.class})

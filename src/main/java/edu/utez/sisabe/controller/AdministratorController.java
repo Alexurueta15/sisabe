@@ -41,6 +41,11 @@ public class AdministratorController {
         this.studentService = studentService;
     }
 
+    @GetMapping("/user")
+    public List<User> findAllUser(){
+        return userService.findAll();
+    }
+
     @GetMapping("/logbook")
     public List<Logbook> findAllLogbook() {
         return logbookService.findAll();

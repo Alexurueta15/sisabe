@@ -1,6 +1,5 @@
 package edu.utez.sisabe.bean;
 
-import edu.utez.sisabe.entity.Career;
 import edu.utez.sisabe.entity.Student;
 import edu.utez.sisabe.util.group.CreateStudent;
 import edu.utez.sisabe.util.group.DeleteStudent;
@@ -57,19 +56,20 @@ public class StudentDTO {
     private String enrollment;
 
     @Valid
-    @NotNull(groups = {UpdateStudent.class, CreateStudent.class})
+    @NotNull(groups = CreateStudent.class)
     private CareerDTO career;
 
     @Valid
-    @NotNull(groups = {UpdateStudent.class, CreateStudent.class})
+    @NotNull(groups = CreateStudent.class)
     private UserDTO user;
 
     @NotEmpty(groups = {UpdateStudent.class, CreateStudent.class})
     private String shift;
 
-    public Student cloneEntity(){
-        return new Student(getId(),getName(),getLastname(),getCurp(),getBirthDate(),getGender(),
-                getNationality(),getAddress().cloneEntity(),getPhone(),getPhoneHome(),getEnrollment(),
-                new Career(getCareer().getId()),getUser().cloneEntity(),getShift());
+    public Student cloneEntity() {
+        return new Student(getId(), getName(), getLastname(), getCurp(), getBirthDate(), getGender(),
+                getNationality(), getAddress().cloneEntity(), getPhone(), getPhoneHome(), getEnrollment(),
+                getCareer() != null ? getCareer().cloneEntity() : null,
+                getUser() != null ? getUser().cloneEntity() : null, getShift());
     }
 }

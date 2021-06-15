@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
+import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -30,6 +31,7 @@ public class UserService implements UserDetailsService {
         this.emailService = emailService;
     }
 
+    public List<User> findAll(){return userRepository.findAll();}
 
     public User findUserById(String id) {
         return userRepository.findUserById(id);
@@ -50,12 +52,11 @@ public class UserService implements UserDetailsService {
 
     public void updatePassword(User user) throws MessagingException {
         User userAux = userRepository.findUserByUsername(user.getUsername());
-        user = new User(userAux.getId(), userAux.getUsername(), userAux.getPassword(), userAux.getRole(),
-                userAux.getEnabled());
-        userAux.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        logbookService.update(userAux, user);
-        userRepository.save(userAux);
         String passGenerated = PasswordGenerator.getPassword();
+        user = new User(userAux.getId(), userAux.getUsername(), bCryptPasswordEncoder.encode(passGenerated),
+                userAux.getRole(), userAux.getEnabled());
+        logbookService.update(userAux, user);
+        userRepository.save(user);
         emailService.sendEmail(user.getUsername(), passGenerated);
     }
 

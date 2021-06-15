@@ -40,7 +40,7 @@ public class StudentService {
     public void update (Student student){
         Student prevStudent = studentRepository.findStudentById(student.getId());
         student.setUser(new User(prevStudent.getUser().getId()));
-        student.setCareer(new Career(student.getCareer().getId()));
+        student.setCareer(new Career(prevStudent.getCareer().getId()));
         studentRepository.save(student);
         logbookService.update(prevStudent,student);
     }

@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/estudiante")
 public class StudentController {
 
-    private StudentService studentService;
+    private final StudentService studentService;
 
     private StudentController(StudentService studentService){
         this.studentService = studentService;
     }
 
-    @PutMapping("/student")
+    @PutMapping
     private Object updateStudent (@Validated(UpdateStudent.class) @RequestBody StudentDTO studentDTO){
         if (!studentService.existById(studentDTO.getId()))
             return new ErrorMessage("No existe estudiante registrado");

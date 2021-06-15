@@ -18,6 +18,14 @@ public class Scholarship {
         this.id = id;
     }
 
+    public Scholarship(String id, String name, String description, String image) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.image = image;
+        this.enabled=true;
+    }
+
     @Id
     private String id;
     private String name;

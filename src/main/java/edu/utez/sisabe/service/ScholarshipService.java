@@ -4,7 +4,10 @@ import edu.utez.sisabe.entity.Scholarship;
 import edu.utez.sisabe.repository.ScholarshipRepository;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Scanner;
 
 @Service
 public class ScholarshipService {
@@ -45,7 +48,6 @@ public class ScholarshipService {
         Scholarship prevScholarship = scholarshipRepository.findScholarshipById(id);
         Scholarship newScholarship = new Scholarship(prevScholarship.getId(), prevScholarship.getName(),
                 prevScholarship.getDescription(), prevScholarship.getImage(), !prevScholarship.getEnabled());
-
         scholarshipRepository.save(newScholarship);
         logbookService.update(prevScholarship, newScholarship);
     }

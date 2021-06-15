@@ -25,9 +25,7 @@ public class ScholarshipDTO {
     @NotEmpty(groups = {CreateScholarship.class})
     private String image;
 
-    private Boolean enabled;
-
     public Scholarship cloneEntity(){
-        return new Scholarship(getId(),getName(),getDescription(),getImage(),getEnabled());
+        return new Scholarship(getId(),getName(),getDescription(),getImage());
     }
 }

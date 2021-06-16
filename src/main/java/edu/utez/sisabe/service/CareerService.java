@@ -23,12 +23,20 @@ public class CareerService {
         return careerRepository.existsByName(name);
     }
 
+    public boolean existsByDegree(String degree){
+        return careerRepository.existsByDegree(degree);
+    }
+
     public Career findCareerById(String id){
         return careerRepository.findCareerById(id);
     }
 
     public List<Career> findAll() {
         return careerRepository.findAll();
+    }
+
+    public List<Career> findAllByEnabledTrueAndDegreeAndDivision_id(String degree, String idDivision) {
+        return careerRepository.findAllByEnabledTrueAndDegreeAndDivision_Id(degree, idDivision);
     }
 
     public List<Career> findAllByEnabledTrueAndDivision_id(String idDivision) {

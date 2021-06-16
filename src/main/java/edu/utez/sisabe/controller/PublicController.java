@@ -58,7 +58,20 @@ public class PublicController {
         return careerService.findAllByEnabledTrue();
     }
 
-    @GetMapping("/career/{division}")
+    @GetMapping("/career/{degree}/division/{division}")
+    public Object findAllCareerByDegreeAndDivision(
+            @PathVariable(name = "degree") @NotEmpty(message = "El nivel académico no puede ser nulo")
+                    String degree,
+            @PathVariable(name = "division") @NotEmpty(message = "El identificador de la división no puede ser nulo")
+                    String idDivision) {
+        if (!careerService.existsByDegree(degree))
+            return new ErrorMessage("Nivel académico ingresado no existente");
+        if (divisionService.findDivisionById(idDivision) == null)
+            return new ErrorMessage("División ingresada no existente");
+        return careerService.findAllByEnabledTrueAndDegreeAndDivision_id(degree, idDivision);
+    }
+
+    @GetMapping("/career/division/{division}")
     public Object findAllCareerByDivision(
             @PathVariable(name = "division") @NotEmpty(message = "El identificador de la división no puede ser nulo")
                     String idDivision) {

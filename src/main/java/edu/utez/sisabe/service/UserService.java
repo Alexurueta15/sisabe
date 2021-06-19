@@ -31,10 +31,16 @@ public class UserService implements UserDetailsService {
         this.emailService = emailService;
     }
 
-    public List<User> findAll(){return userRepository.findAll();}
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
 
     public User findUserById(String id) {
         return userRepository.findUserById(id);
+    }
+
+    public boolean existsById(String id) {
+        return userRepository.existsById(id);
     }
 
     public boolean existsByUsername(String username) {
@@ -48,7 +54,17 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public void update(User user) { userRepository.save(user); }
+    public void delete(User user) {
+        User userAux = userRepository.findUserById(user.getId());
+        user = new User(userAux.getId(), userAux.getUsername(), userAux.getPassword(),
+                userAux.getRole(), !userAux.getEnabled());
+        logbookService.update(userAux, user);
+        userRepository.save(user);
+    }
+
+    public void update(User user) {
+        userRepository.save(user);
+    }
 
     public void updatePassword(User user) throws MessagingException {
         User userAux = userRepository.findUserByUsername(user.getUsername());

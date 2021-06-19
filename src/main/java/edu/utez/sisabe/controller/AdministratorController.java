@@ -46,6 +46,14 @@ public class AdministratorController {
         return userService.findAll();
     }
 
+    @DeleteMapping("/user")
+    public Object DeleteUser(@Validated(DeleteUser.class) @RequestBody UserDTO userDTO){
+        if (!userService.existsById(userDTO.getId()))
+            return new ErrorMessage("El usuario ingresado no existe");
+        userService.delete(userDTO.cloneEntity());
+        return new SuccessMessage("Se ha cambiado el estatus del usuario");
+    }
+
     @GetMapping("/logbook")
     public List<Logbook> findAllLogbook() {
         return logbookService.findAll();

@@ -20,12 +20,15 @@ public class ScholarshipDTO {
     private String name;
 
     @NotEmpty(groups = {UpdateScholarship.class, CreateScholarship.class})
+    private String category;
+
+    @NotEmpty(groups = {UpdateScholarship.class, CreateScholarship.class})
     private String description;
 
     @NotEmpty(groups = {CreateScholarship.class})
     private String image;
 
     public Scholarship cloneEntity(){
-        return new Scholarship(getId(),getName(),getDescription(),getImage());
+        return new Scholarship(getId(),getName(), getCategory(), getDescription(),getImage());
     }
 }

@@ -47,7 +47,8 @@ public class ScholarshipService {
     public void delete(String id) {
         Scholarship prevScholarship = scholarshipRepository.findScholarshipById(id);
         Scholarship newScholarship = new Scholarship(prevScholarship.getId(), prevScholarship.getName(),
-                prevScholarship.getDescription(), prevScholarship.getImage(), !prevScholarship.getEnabled());
+                prevScholarship.getCategory(),prevScholarship.getDescription(), prevScholarship.getImage(),
+                !prevScholarship.getEnabled());
         scholarshipRepository.save(newScholarship);
         logbookService.update(prevScholarship, newScholarship);
     }

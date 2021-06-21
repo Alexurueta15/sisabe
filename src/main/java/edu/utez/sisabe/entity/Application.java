@@ -31,4 +31,19 @@ public class Application {
     private Coordinator coordinator;
     private Student student;
     private Division division;
+
+    public Application(String id, Integer previousQuarter, Integer currentQuarter, Float grade, String reason,
+                       Announcement announcement, String gradeReport, String birthCertificate,
+                       List<String> birthCertificateChild, String activity) {
+        this.id = id;
+        this.previousQuarter = previousQuarter;
+        this.currentQuarter = currentQuarter;
+        this.grade = grade;
+        this.reason = reason;
+        this.announcement = announcement;
+        this.gradeReport = gradeReport;
+        this.birthCertificate = birthCertificate;
+        this.birthCertificateChild = birthCertificateChild;
+        this.activity = activity;
+    }
 }

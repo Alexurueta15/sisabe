@@ -48,8 +48,7 @@ public class CustomHandlerController {
             errorMessage = fieldError.getField() + ": " + fieldError.getDefaultMessage();
             errorMessages.add(errorMessage);
         }
-        return new ListErrorMessage(HttpStatus.BAD_REQUEST.value(), new Date(),
-                "Los argumentos no son válidos", errorMessages);
+        return new ListErrorMessage(errorMessages);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)

@@ -2,9 +2,7 @@ package edu.utez.sisabe.bean;
 
 import edu.utez.sisabe.entity.Announcement;
 import edu.utez.sisabe.entity.Scholarship;
-import edu.utez.sisabe.util.group.CreateAnnouncement;
-import edu.utez.sisabe.util.group.DeleteAnnouncement;
-import edu.utez.sisabe.util.group.UpdateAnnouncement;
+import edu.utez.sisabe.util.group.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,24 +18,19 @@ import java.sql.Date;
 @AllArgsConstructor
 public class AnnouncementDTO {
 
-    @NotEmpty(message = "El identificador no puede ser nulo",
-            groups = {UpdateAnnouncement.class, DeleteAnnouncement.class})
+    @NotEmpty(groups = {UpdateAnnouncement.class, DeleteAnnouncement.class, CreateApplication.class, UpdateApplication.class})
     private String id;
 
-    @NotEmpty(message = "El periodo no puede ser nulo",
-            groups = {UpdateAnnouncement.class, CreateAnnouncement.class})
+    @NotEmpty(groups = {UpdateAnnouncement.class, CreateAnnouncement.class, CreateApplication.class, UpdateApplication.class})
     private String period;
 
-    @NotEmpty(message = "La fecha de inicio no puede ser nula",
-            groups = {UpdateAnnouncement.class, CreateAnnouncement.class})
+    @NotEmpty(groups = {UpdateAnnouncement.class, CreateAnnouncement.class, CreateApplication.class, UpdateApplication.class})
     private Date startDate;
 
-    @NotEmpty(message = "La fecha final no puede ser nula",
-            groups = {UpdateAnnouncement.class, CreateAnnouncement.class})
+    @NotEmpty(groups = {UpdateAnnouncement.class, CreateAnnouncement.class, CreateApplication.class, UpdateApplication.class})
     private Date finalDate;
 
-    @NotNull(message = "Se necesitan datos de la beca",
-            groups = {CreateAnnouncement.class, UpdateAnnouncement.class})
+    @NotNull(groups = {CreateAnnouncement.class, UpdateAnnouncement.class, CreateApplication.class, UpdateApplication.class})
     private Scholarship scholarship;
 
     private Boolean enabled;

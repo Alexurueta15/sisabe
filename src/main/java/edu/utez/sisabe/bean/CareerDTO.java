@@ -22,13 +22,15 @@ public class CareerDTO {
     @NotEmpty(groups = {CreateCareer.class, UpdateCareer.class})
     private String degree;
 
-    @Valid @NotNull(groups = {CreateCareer.class, UpdateCareer.class})
+    @Valid
+    @NotNull(groups = {CreateCareer.class, UpdateCareer.class})
     private DivisionDTO division;
 
     @NotNull(groups = {UpdateCareer.class})
     private Boolean enabled;
 
     public Career cloneEntity() {
-        return new Career(getId(), getName(), getDegree(), getDivision().cloneEntity(), getEnabled());
+        return new Career(getId(), getName(), getDegree(),
+                getDivision() != null ? getDivision().cloneEntity() : null, getEnabled());
     }
 }

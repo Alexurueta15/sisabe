@@ -35,7 +35,7 @@ public class AnnouncementDTO {
 
     private Boolean enabled;
 
-    public Announcement cloneEntity (){
-        return new Announcement(getId(),getPeriod(),getStartDate(),getFinalDate(),getScholarship(),getEnabled());
+    public Announcement cloneEntity() {
+        return new Announcement(getId(), getPeriod(), getStartDate(), getFinalDate(), getScholarship(), getEnabled());
     }
 }

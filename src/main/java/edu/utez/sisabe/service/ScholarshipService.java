@@ -25,6 +25,11 @@ public class ScholarshipService {
         return scholarshipRepository.findAll();
     }
 
+    public boolean existsScholarShipByName(String name){
+        return scholarshipRepository.existsByName(name);
+    }
+
+
     public List<Scholarship> findAllByEnabledTrue() {
         return scholarshipRepository.findAllByEnabledTrue();
     }

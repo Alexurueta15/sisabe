@@ -12,4 +12,5 @@ public interface ScholarshipRepository extends MongoRepository<Scholarship,Strin
 
     List<Scholarship> findAllByEnabledTrue();
     Scholarship findScholarshipById(String id);
+    boolean existsByName(String name);
 }

@@ -28,10 +28,12 @@ public class AdministratorController {
 
     private final StudentService studentService;
 
+    private final AnnouncementService announcementService;
+
     public AdministratorController(DivisionService divisionService, CareerService careerService,
                                    CoordinatorService coordinatorService, LogbookService logbookService,
                                    UserService userService, ScholarshipService scholarshipService,
-                                   StudentService studentService) {
+                                   StudentService studentService, AnnouncementService announcementService) {
         this.divisionService = divisionService;
         this.careerService = careerService;
         this.coordinatorService = coordinatorService;
@@ -39,15 +41,16 @@ public class AdministratorController {
         this.userService = userService;
         this.scholarshipService = scholarshipService;
         this.studentService = studentService;
+        this.announcementService = announcementService;
     }
 
     @GetMapping("/user")
-    public List<User> findAllUser(){
+    public List<User> findAllUser() {
         return userService.findAll();
     }
 
     @DeleteMapping("/user")
-    public Object DeleteUser(@Validated(DeleteUser.class) @RequestBody UserDTO userDTO){
+    public Object DeleteUser(@Validated(DeleteUser.class) @RequestBody UserDTO userDTO) {
         if (!userService.existsById(userDTO.getId()))
             return new ErrorMessage("El usuario ingresado no existe");
         userService.delete(userDTO.cloneEntity());
@@ -158,6 +161,8 @@ public class AdministratorController {
 
     @PostMapping("/scholarship")
     public Object saveScholarship(@Validated(CreateScholarship.class) @RequestBody ScholarshipDTO scholarshipDTO) {
+        if (scholarshipService.existsScholarShipByName(scholarshipDTO.getName()))
+            return new ErrorMessage("El nombre de beca ya existe");
         Scholarship scholarship = scholarshipDTO.cloneEntity();
         scholarship.setEnabled(true);
         if (scholarshipService.save(scholarship))
@@ -183,16 +188,51 @@ public class AdministratorController {
     }
 
     @GetMapping("/student")
-    public List<Student> findAllStudent(){
+    public List<Student> findAllStudent() {
         return studentService.findAll();
     }
 
     @DeleteMapping("/student")
-    public Object deleteStudent(@Validated(DeleteStudent.class) @RequestBody StudentDTO studentDTO){
+    public Object deleteStudent(@Validated(DeleteStudent.class) @RequestBody StudentDTO studentDTO) {
         if (!studentService.existById(studentDTO.getId()))
             return new ErrorMessage("No existe estudiante registrado");
         studentService.delete(studentDTO.getId());
         return new SuccessMessage("Se ha cambiado el estado del estudiante");
     }
 
+    @GetMapping("/announcement")
+    public List<Announcement> findAllAnnouncement() {
+        return announcementService.findAll();
+    }
+
+    @PostMapping("/announcement")
+    public Object saveAnnoucement(@Validated(CreateAnnouncement.class) @RequestBody AnnouncementDTO announcementDTO) {
+        if (announcementDTO.getFinalDate().isBefore(announcementDTO.getStartDate()) ||
+                announcementDTO.getFinalDate().isEqual(announcementDTO.getStartDate()))
+            return new ErrorMessage("La fecha final no puede ser igual o anterior a fecha inicial");
+        Announcement announcement = announcementDTO.cloneEntity();
+        announcement.setEnabled(true);
+        announcementService.save(announcement);
+        return new SuccessMessage("Convocatoria registrada");
+    }
+
+    @PutMapping("/announcement")
+    public Object updateAnnoucement(@Validated(UpdateAnnouncement.class) @RequestBody AnnouncementDTO announcementDTO) {
+        if (!announcementService.existsById(announcementDTO.getId()))
+            return new ErrorMessage("No existe convocatoria registrada");
+        if (announcementDTO.getFinalDate().isBefore(announcementDTO.getStartDate()) ||
+                announcementDTO.getFinalDate().isEqual(announcementDTO.getStartDate()))
+            return new ErrorMessage("La fecha final no puede ser igual o anterior a fecha inicial");
+        Announcement announcement = announcementDTO.cloneEntity();
+        announcementService.update(announcement);
+        return new SuccessMessage("Convocatoria actualizada");
+    }
+
+    @DeleteMapping("/announcement")
+    public Object deleteAnnoucement(@Validated(DeleteAnnouncement.class) @RequestBody AnnouncementDTO announcementDTO) {
+        if (!announcementService.existsById(announcementDTO.getId()))
+            return new ErrorMessage("No existe convocatoria registrada");
+        announcementService.delete(announcementDTO.getId());
+        return new SuccessMessage("Convocatoria actualizada");
+    }
 }

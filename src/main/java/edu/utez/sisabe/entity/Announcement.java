@@ -7,7 +7,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -16,11 +16,20 @@ import java.sql.Date;
 @Document
 public class Announcement {
 
+    public Announcement(String id, String period, LocalDate startDate, LocalDate finalDate, Scholarship scholarship) {
+        this.id = id;
+        this.period = period;
+        this.startDate = startDate;
+        this.finalDate = finalDate;
+        this.scholarship = scholarship;
+        this.enabled = null;
+    }
+
     @Id
     private String id;
     private String period;
-    private Date startDate;
-    private Date finalDate;
+    private LocalDate startDate;
+    private LocalDate finalDate;
     private Scholarship scholarship;
     private Boolean enabled;
 }

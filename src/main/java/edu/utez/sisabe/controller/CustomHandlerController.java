@@ -45,7 +45,8 @@ public class CustomHandlerController {
         List<String> errorMessages = new ArrayList<>();
         String errorMessage;
         for (FieldError fieldError : ex.getFieldErrors()) {
-            errorMessage = fieldError.getField() + ": " + fieldError.getDefaultMessage();
+            errorMessage = fieldError.getField() + ": " + fieldError.getDefaultMessage() + ". " +
+                    "Valor recibido: " + fieldError.getRejectedValue();
             errorMessages.add(errorMessage);
         }
         return new ListErrorMessage(errorMessages);

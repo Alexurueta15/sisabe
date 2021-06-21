@@ -1,7 +1,6 @@
 package edu.utez.sisabe.repository;
 
 import edu.utez.sisabe.entity.User;
-import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

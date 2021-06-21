@@ -4,13 +4,10 @@ import edu.utez.sisabe.bean.ErrorMessage;
 import edu.utez.sisabe.bean.StudentDTO;
 import edu.utez.sisabe.bean.SuccessMessage;
 import edu.utez.sisabe.bean.UserDTO;
+import edu.utez.sisabe.entity.Announcement;
 import edu.utez.sisabe.entity.Career;
 import edu.utez.sisabe.entity.Division;
-import edu.utez.sisabe.entity.Student;
-import edu.utez.sisabe.service.CareerService;
-import edu.utez.sisabe.service.DivisionService;
-import edu.utez.sisabe.service.StudentService;
-import edu.utez.sisabe.service.UserService;
+import edu.utez.sisabe.service.*;
 import edu.utez.sisabe.util.group.CreateStudent;
 import edu.utez.sisabe.util.group.CreateUser;
 import org.springframework.validation.annotation.Validated;
@@ -32,12 +29,15 @@ public class PublicController {
 
     private final StudentService studentService;
 
+    private final AnnouncementService announcementService;
+
     public PublicController(DivisionService divisionService, CareerService careerService,
-                            UserService userService, StudentService studentService) {
+                            UserService userService, StudentService studentService, AnnouncementService announcementService) {
         this.divisionService = divisionService;
         this.careerService = careerService;
         this.userService = userService;
         this.studentService = studentService;
+        this.announcementService = announcementService;
     }
 
     @PutMapping("/user")
@@ -78,6 +78,11 @@ public class PublicController {
         if (divisionService.findDivisionById(idDivision) == null)
             return new ErrorMessage("División ingresada no existente");
         return careerService.findAllByEnabledTrueAndDivision_id(idDivision);
+    }
+
+    @GetMapping("/announcement")
+    public List<Announcement> findAllAnnouncement() {
+        return announcementService.findAllByEnabledTrueAndValid();
     }
 
     @PostMapping("/student")

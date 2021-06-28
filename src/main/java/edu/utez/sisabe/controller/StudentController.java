@@ -1,6 +1,7 @@
 package edu.utez.sisabe.controller;
 
 import edu.utez.sisabe.bean.*;
+import edu.utez.sisabe.entity.Student;
 import edu.utez.sisabe.service.ApplicationService;
 import edu.utez.sisabe.service.StudentService;
 import edu.utez.sisabe.util.group.CreateApplication;
@@ -27,6 +28,11 @@ public class StudentController {
     private StudentController(StudentService studentService, ApplicationService applicationService) {
         this.studentService = studentService;
         this.applicationService = applicationService;
+    }
+
+    @GetMapping
+    private Student getStudent(){
+        return studentService.getStudentInSession();
     }
 
     @PutMapping

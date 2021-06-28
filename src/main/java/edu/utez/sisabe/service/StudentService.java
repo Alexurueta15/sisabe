@@ -4,6 +4,7 @@ import edu.utez.sisabe.entity.Career;
 import edu.utez.sisabe.entity.Student;
 import edu.utez.sisabe.entity.User;
 import edu.utez.sisabe.repository.StudentRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +22,12 @@ public class StudentService {
         this.studentRepository = studentRepository;
         this.logbookService = logbookService;
         this.userService = userService;
+    }
+
+    public Student getStudentInSession(){
+        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.loadUserByUsername(username);
+        return studentRepository.findStudentByUser(user.getId());
     }
 
     public List<Student> findAll (){

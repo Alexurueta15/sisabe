@@ -24,6 +24,10 @@ public class Coordinator {
         this.division = division;
     }
 
+    public Coordinator(String id) {
+        this.id = id;
+    }
+
     @Id
     private String id;
     private String name;

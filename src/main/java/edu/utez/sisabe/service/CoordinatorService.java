@@ -64,4 +64,9 @@ public class CoordinatorService {
         coordinator.setUser(new User(coordinator.getUser().getId()));
         coordinatorRepository.save(coordinator);
     }
+
+    public Coordinator findByUsername (String username){
+        User user = userService.loadUserByUsername(username);
+        return coordinatorRepository.findCoordinatorByUser_Id(user.getId());
+    }
 }

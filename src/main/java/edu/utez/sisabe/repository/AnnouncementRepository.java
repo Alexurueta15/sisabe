@@ -19,5 +19,7 @@ public interface AnnouncementRepository extends MongoRepository<Announcement, St
             "{$unwind: '$scholarship'}"})
     List<Announcement> findAllByEnabledTrueAndValid(LocalDate date);
 
+    @Aggregation(value = {"{$lookup: {from: 'scholarship', localField: 'scholarship._id', foreignField: '_id', as: 'scholarship'}}",
+            "{$unwind: '$scholarship'}"})
     Announcement findAnnouncementById(String id);
 }

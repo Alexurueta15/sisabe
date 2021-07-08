@@ -25,6 +25,10 @@ public class Announcement {
         this.enabled = null;
     }
 
+    public Announcement(String id) {
+        this.id = id;
+    }
+
     @Id
     private String id;
     private String period;

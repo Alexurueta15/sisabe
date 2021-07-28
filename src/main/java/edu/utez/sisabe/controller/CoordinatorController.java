@@ -5,15 +5,14 @@ import edu.utez.sisabe.bean.ErrorMessage;
 import edu.utez.sisabe.bean.SuccessMessage;
 import edu.utez.sisabe.entity.Application;
 import edu.utez.sisabe.service.ApplicationService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import edu.utez.sisabe.util.group.UpdateApplicationVeredict;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/coordinador")
+@RequestMapping(value = "/comite")
 public class CoordinatorController {
 
     private final ApplicationService applicationService;
@@ -24,15 +23,17 @@ public class CoordinatorController {
 
     @GetMapping("/application")
     public List<Application> findAll(){
-        return applicationService.findAll();
+        return applicationService.findAllCoordinator();
     }
 
     @PostMapping("/application")
-    public Object saveVeredict(ApplicationDTO applicationDTO){
+    public Object saveVeredict(@Validated(UpdateApplicationVeredict.class) @RequestBody ApplicationDTO applicationDTO){
+        System.out.println("controller: "+applicationDTO.getComment());
+        System.out.println("controller: "+applicationDTO.getDiscount());
         if (applicationService.saveVeredict(applicationDTO.cloneEntitytoVeredict())){
             return new SuccessMessage("Solicitud valorada correctamente");
         }else {
-            return new ErrorMessage("Solicitud no valorada");
+            return new ErrorMessage("Solicitud no valorada, revisa los datos");
         }
 
     }

@@ -32,7 +32,7 @@ public class Application {
     private Student student;
     private Division division;
     private Boolean validated;
-    private Boolean verdict;
+    private Boolean veredict;
     private String comment;
     private Integer discount;
     private Coordinator coordinator;
@@ -40,7 +40,7 @@ public class Application {
 
     public Application(String id, Integer previousQuarter, Integer currentQuarter, Float grade, String reason,
                        Announcement announcement, String gradeReport, String birthCertificate,
-                       List<String> birthCertificateChild, String activity,Student student, Division division) {
+                       List<String> birthCertificateChild, String activity, Division division) {
         this.id = id;
         this.previousQuarter = previousQuarter;
         this.currentQuarter = currentQuarter;
@@ -51,13 +51,12 @@ public class Application {
         this.birthCertificate = birthCertificate;
         this.birthCertificateChild = birthCertificateChild;
         this.activity = activity;
-        this.student = student;
         this.division = division;
     }
 
     public Application (String id, Boolean veredict, String comment, Integer discount){
         this.id = id;
-        this.verdict = veredict;
+        this.veredict = veredict;
         this.comment = comment;
         this.discount = discount;
     }

@@ -15,8 +15,7 @@ public interface CoordinatorRepository extends MongoRepository<Coordinator, Stri
     @Aggregation(value = {"{$lookup: {from: 'division', localField: 'division._id', foreignField: '_id', as: 'division'}}",
             "{$lookup: {from: 'user', localField: 'user._id', foreignField: '_id', as: 'user'}}"})
     List<Coordinator> findAll();
-    @Aggregation(value = {"{$lookup: {from: 'division', localField: 'division._id', foreignField: '_id', as: 'division'}}",
-            "{$lookup: {from: 'user', localField: 'user._id', foreignField: '_id', as: 'user'}}"})
+
     Coordinator findCoordinatorByUser_Id(String id);
 
 }

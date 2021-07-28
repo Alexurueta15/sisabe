@@ -21,5 +21,8 @@ public interface StudentRepository extends MongoRepository<Student,String> {
     List<Student> findAll();
 
     List<Student> findAllByCareer_Division(Division division);
+
     boolean existsById(String id);
+
+    Student findStudentByUser_Id(String id);
 }

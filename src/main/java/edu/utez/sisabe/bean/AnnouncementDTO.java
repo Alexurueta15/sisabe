@@ -20,16 +20,16 @@ public class AnnouncementDTO {
     @NotEmpty(groups = {UpdateAnnouncement.class, DeleteAnnouncement.class, CreateApplication.class, UpdateApplication.class})
     private String id;
 
-    @NotEmpty(groups = {CreateAnnouncement.class, CreateApplication.class, UpdateApplication.class})
+    @NotEmpty(groups = {CreateAnnouncement.class})
     private String period;
 
-    @NotNull(groups = {CreateAnnouncement.class, UpdateAnnouncement.class, CreateApplication.class, UpdateApplication.class})
+    @NotNull(groups = {CreateAnnouncement.class, UpdateAnnouncement.class})
     private LocalDate startDate;
 
-    @NotNull(groups = {CreateAnnouncement.class, UpdateAnnouncement.class, CreateApplication.class, UpdateApplication.class})
+    @NotNull(groups = {CreateAnnouncement.class, UpdateAnnouncement.class})
     private LocalDate finalDate;
 
-    @NotNull(groups = {CreateAnnouncement.class, CreateApplication.class, UpdateApplication.class})
+    @NotNull(groups = {CreateAnnouncement.class})
     private Scholarship scholarship;
 
     public Announcement cloneEntity() {

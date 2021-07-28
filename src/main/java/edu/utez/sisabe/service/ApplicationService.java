@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,41 +23,62 @@ public class ApplicationService {
 
     private final CoordinatorService coordinatorService;
 
+    private final ScholarshipService scholarshipService;
+
     public ApplicationService(ApplicationRepository applicationRepository, LogbookService logbookService,
                               AnnouncementService announcementService, StudentService studentService,
-                              CoordinatorService coordinatorService) {
+                              CoordinatorService coordinatorService, ScholarshipService scholarshipService) {
         this.applicationRepository = applicationRepository;
         this.logbookService = logbookService;
         this.announcementService = announcementService;
         this.studentService = studentService;
         this.coordinatorService = coordinatorService;
+        this.scholarshipService = scholarshipService;
     }
 
-    public List<Application> findAll(){
+    public List<Application> findAllCoordinator(){
+
         Coordinator coordinator = coordinatorService.findByUsername((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        return applicationRepository.findAllByDivision_IdAndActual(coordinator.getDivision().getId(), LocalDate.now());
+        List<Application> applications = new ArrayList<>();
+        applications.addAll(applicationRepository.findAllByValidatedFalseAndDivision_IdAndActual(coordinator.getDivision().getId(), LocalDate.now()));
+        applications.addAll(applicationRepository.findAllByValidatedTrueAndDivision_IdAndActual(coordinator.getDivision().getId(), LocalDate.now()));
+
+        return applications;
+    }
+
+    public List<Application> findAllStudent(){
+
+        Student student = studentService.findByUsername((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        List<Application> applications = new ArrayList<>();
+        applications.addAll(applicationRepository.findAllByStudent_IdAAndValidatedFalse(student.getId()));
+        applications.addAll(applicationRepository.findAllByStudent_IdAAndValidatedTrue(student.getId()));
+
+        return applications;
     }
 
     public boolean save(Application application){
 
         Announcement announcement = announcementService.findById(application.getAnnouncement().getId());
+        announcement.setScholarship(scholarshipService.findById(announcement.getScholarship().getId()));
         if (application.getGradeReport()==null)
             return false;
 
-        if (application.getAnnouncement().getScholarship().getCategory().equals("Madres solteras")){
+        if (announcement.getScholarship().getCategory().equals("Madres solteras")){
 
             if (application.getBirthCertificate()==null || application.getBirthCertificateChild()==null || application.getBirthCertificateChild().size() == 0)
                 return false;
         }
-        if (application.getAnnouncement().getScholarship().getCategory().equals("Deportiva")){
+        if (announcement.getScholarship().getCategory().equals("Deportiva")){
 
             if (application.getActivity()==null)
                 return false;
         }
+        Student student = studentService.findByUsername((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        application.setStudent(new Student(student.getId()));
         application.setAnnouncement(new Announcement(announcement.getId()));
         application.setRegistrationDate(new Date());
         application.setValidated(false);
-        application.setVerdict(false);
+        application.setVeredict(false);
         application = applicationRepository.save(application);
         logbookService.save(application);
         return existsById(application.getId());
@@ -106,7 +128,7 @@ public class ApplicationService {
                 new Announcement(prevApplication.getAnnouncement().getId()), prevApplication.getGradeReport(),
                 prevApplication.getBirthCertificate(), prevApplication.getBirthCertificateChild(),
                 prevApplication.getActivity(),new Student(prevApplication.getStudent().getId()),
-                new Division(prevApplication.getDivision().getId()),true,newApplication.getVerdict(),
+                new Division(prevApplication.getDivision().getId()),true,newApplication.getVeredict(),
                 newApplication.getComment(), newApplication.getDiscount(), new Coordinator(coordinator.getId()));
 
         applicationRepository.save(newApplication);
@@ -120,8 +142,9 @@ public class ApplicationService {
         return applicationRepository.existsById(id);
     }
 
-    public boolean existsByStudent_Id(String id){
-        return applicationRepository.existsByStudent_Id(id);
+    public boolean existsByStudentAndAnnouncement(String idAnnouncement){
+        Student student = studentService.findByUsername((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        return applicationRepository.existsByStudent_IdAndAnnouncement_Id(student.getId(), idAnnouncement);
     }
 
 }

@@ -12,19 +12,62 @@ import java.util.List;
 public interface ApplicationRepository extends MongoRepository<Application,String> {
 
     @Aggregation(value = {"{$lookup: {from: 'announcement', localField: 'announcement._id', foreignField: '_id', as: 'announcement'}}",
-            "{$unwind: 'announcement'}",
-            "{$match:{$and:[{announcement.enabled:true},{announcement.startDate:{$lte: ?1}},{announcement.finalDate:{$gte: ?1}}]}}",
+            "{$unwind: '$announcement'}",
+            "{$match:{$and:[{validated:false},{'announcement.enabled':true},{'announcement.startDate':{$lte: ?1}},{'announcement.finalDate':{$gte: ?1}}]}}",
+            "{$lookup: {from: 'scholarship', localField: 'announcement.scholarship._id', foreignField: '_id', as: 'announcement.scholarship'}}",
+            "{$unwind: '$announcement.scholarship'}",
+            "{$lookup: {from: 'student', localField: 'student._id', foreignField: '_id', as: 'student'}}",
+            "{$unwind: '$student'}",
+            "{$lookup: {from: 'career', localField: 'student.career._id', foreignField: '_id', as: 'student.career'}}",
+            "{$unwind: '$student.career'}",
+            })
+    List<Application> findAllByValidatedFalseAndDivision_IdAndActual(String id, LocalDate actual);
+
+    @Aggregation(value = {"{$lookup: {from: 'announcement', localField: 'announcement._id', foreignField: '_id', as: 'announcement'}}",
+            "{$unwind: '$announcement'}",
+            "{$match:{$and:[{'validated':true},{'announcement.enabled':true},{'announcement.startDate':{$lte: ?1}},{'announcement.finalDate':{$gte: ?1}}]}}",
+            "{$lookup: {from: 'scholarship', localField: 'announcement.scholarship._id', foreignField: '_id', as: 'announcement.scholarship'}}",
+            "{$unwind: '$announcement.scholarship'}",
+            "{$lookup: {from: 'student', localField: 'student._id', foreignField: '_id', as: 'student'}}",
+            "{$unwind: '$student'}",
+            "{$lookup: {from: 'career', localField: 'student.career._id', foreignField: '_id', as: 'student.career'}}",
+            "{$unwind: '$student.career'}",
+            "{$lookup: {from: 'coordinator', localField: 'coordinator._id', foreignField: '_id', as: 'coordinator'}}",
+            "{$unwind: '$coordinator'}"
+    })
+    List<Application> findAllByValidatedTrueAndDivision_IdAndActual(String id, LocalDate actual);
+
+    @Aggregation(value = {"{$match:{validated:true}}",
+            "{$lookup: {from: 'announcement', localField: 'announcement._id', foreignField: '_id', as: 'announcement'}}",
+            "{$unwind: '$announcement'}",
+            "{$lookup: {from: 'scholarship', localField: 'announcement.scholarship._id', foreignField: '_id', as: 'announcement.scholarship'}}",
+            "{$unwind: '$announcement.scholarship'}",
+            "{$lookup: {from: 'student', localField: 'student._id', foreignField: '_id', as: 'student'}}",
+            "{$unwind: '$student'}",
+            "{$lookup: {from: 'career', localField: 'student.career._id', foreignField: '_id', as: 'student.career'}}",
+            "{$unwind: '$student.career'}",
+            "{$lookup: {from: 'coordinator', localField: 'coordinator._id', foreignField: '_id', as: 'coordinator'}}",
+            "{$unwind: '$coordinator'}"})
+    List<Application> findAllByStudent_IdAAndValidatedTrue(String id);
+
+    @Aggregation(value = {"{$match:{validated:false}}",
+            "{$lookup: {from: 'announcement', localField: 'announcement._id', foreignField: '_id', as: 'announcement'}}",
+            "{$unwind: '$announcement'}",
             "{$lookup: {from: 'scholarship', localField: 'announcement.scholarship._id', foreignField: '_id', as: 'announcement.scholarship'}}",
             "{$unwind: '$announcement.scholarship'}",
             "{$lookup: {from: 'student', localField: 'student._id', foreignField: '_id', as: 'student'}}",
             "{$unwind: '$student'}",
             "{$lookup: {from: 'career', localField: 'student.career._id', foreignField: '_id', as: 'student.career'}}",
             "{$unwind: '$student.career'}"})
-    List<Application> findAllByDivision_IdAndActual(String id, LocalDate actual);
+    List<Application> findAllByStudent_IdAAndValidatedFalse(String id);
 
     Application findApplicationById(String id);
+
     Application save(Application application);
+
     boolean existsByStudent_Id(String id);
+
     boolean existsByIdAndValidated(String id, Boolean validated);
+
     boolean existsByStudent_IdAndAnnouncement_Id(String student_id, String announcement_id);
 }

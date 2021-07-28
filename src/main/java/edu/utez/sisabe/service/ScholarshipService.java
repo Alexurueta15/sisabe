@@ -61,4 +61,8 @@ public class ScholarshipService {
     public boolean existById(String id) {
         return scholarshipRepository.existsById(id);
     }
+
+    public Scholarship findById(String id){
+        return scholarshipRepository.findScholarshipById(id);
+    }
 }

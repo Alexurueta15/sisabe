@@ -36,6 +36,7 @@ public class CoordinatorService {
 
     public void save(Coordinator coordinator) throws MessagingException {
         String passGenerated = PasswordGenerator.getPassword();
+        System.out.println(passGenerated);
         coordinator.getUser().setPassword(passGenerated);
         coordinator.getUser().setRole("Comité");
         User newUser = userService.save(coordinator.getUser());

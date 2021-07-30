@@ -1,9 +1,7 @@
 package edu.utez.sisabe.bean;
 
 import edu.utez.sisabe.entity.Student;
-import edu.utez.sisabe.util.group.CreateStudent;
-import edu.utez.sisabe.util.group.DeleteStudent;
-import edu.utez.sisabe.util.group.UpdateStudent;
+import edu.utez.sisabe.util.group.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +18,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 public class StudentDTO {
 
-    @NotEmpty(groups = {UpdateStudent.class, DeleteStudent.class})
+    @NotEmpty(groups = {UpdateStudent.class, DeleteStudent.class, CreateApplication.class, UpdateApplication.class})
     private String id;
 
     @NotEmpty(groups = {UpdateStudent.class, CreateStudent.class})

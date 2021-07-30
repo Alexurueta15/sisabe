@@ -1,6 +1,8 @@
 package edu.utez.sisabe.controller;
 
 import edu.utez.sisabe.bean.*;
+import edu.utez.sisabe.entity.Application;
+import edu.utez.sisabe.service.AnnouncementService;
 import edu.utez.sisabe.entity.Student;
 import edu.utez.sisabe.service.ApplicationService;
 import edu.utez.sisabe.service.StudentService;
@@ -25,9 +27,12 @@ public class StudentController {
 
     private final ApplicationService applicationService;
 
-    private StudentController(StudentService studentService, ApplicationService applicationService) {
+    private final AnnouncementService announcementService;
+
+    private StudentController(StudentService studentService, ApplicationService applicationService, AnnouncementService announcementService) {
         this.studentService = studentService;
         this.applicationService = applicationService;
+        this.announcementService = announcementService;
     }
 
     @GetMapping
@@ -36,37 +41,32 @@ public class StudentController {
     }
 
     @PutMapping
-    private Object updateStudent(@Validated(UpdateStudent.class) @RequestBody StudentDTO studentDTO) {
+    public Object updateStudent(@Validated(UpdateStudent.class) @RequestBody StudentDTO studentDTO) {
         if (!studentService.existById(studentDTO.getId()))
             return new ErrorMessage("No existe estudiante registrado");
         studentService.update(studentDTO.cloneEntity());
         return new SuccessMessage("Estudiante actualizado");
     }
 
+    @GetMapping("/application")
+    public List<Application> findAll(){
+        return applicationService.findAllStudent();
+    }
+
     @PostMapping("/application")
-    private Object saveApplication(@Validated(CreateApplication.class) @RequestBody ApplicationDTO applicationDTO) {
-        if (!applicationDTO.getAnnouncementDTO().getScholarship().getCategory().equals("Académica")) {
-            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-            Validator validator = factory.getValidator();
-            Set<ConstraintViolation<String>> violations = validator.validate(applicationDTO.getBirthCertificate());
-            Set<ConstraintViolation<List<String>>> violations2 = validator.validate(applicationDTO.getBirthCertificateChild());
-            if (violations.isEmpty() && violations2.isEmpty()) {
-                applicationService.save(applicationDTO.cloneEntity());
-                return new SuccessMessage("Solicitud de beca Registrada");
+    public Object saveApplication(@Validated(CreateApplication.class) @RequestBody ApplicationDTO applicationDTO) {
+        if (announcementService.existsById(applicationDTO.getAnnouncement().getId())) {
+
+             if (!applicationService.existsByStudentAndAnnouncement(applicationDTO.getAnnouncement().getId())){
+                if(applicationService.save(applicationDTO.cloneEntity()))
+                    return new SuccessMessage("Solicitud de beca Registrada");
+                else
+                    return new ErrorMessage("Solicitud de beca no registrada, revisa tus datos");
             } else {
-                List<String> errors = new ArrayList<>();
-                for (ConstraintViolation<String> violation : violations) {
-                    errors.add(violation.getMessage());
-                    errors.add(violation.getMessageTemplate());
-                }
-                for (ConstraintViolation<List<String>> violation : violations2) {
-                    errors.add(violation.getMessage());
-                    errors.add(violation.getMessageTemplate());
-                }
-                return new ListErrorMessage(errors);
+                 return new ErrorMessage("Solicitud de beca ya registrada");
             }
         } else {
-            return new SuccessMessage("Solicitud de beca Registrada");
+            return new ErrorMessage("Convocatoria no existente");
         }
     }
 }

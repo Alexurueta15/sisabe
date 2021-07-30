@@ -4,12 +4,14 @@ import edu.utez.sisabe.entity.Application;
 import edu.utez.sisabe.util.group.CreateApplication;
 import edu.utez.sisabe.util.group.DeleteApplication;
 import edu.utez.sisabe.util.group.UpdateApplication;
+import edu.utez.sisabe.util.group.UpdateApplicationVeredict;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -21,16 +23,16 @@ import java.util.List;
 public class ApplicationDTO {
 
 
-    @NotEmpty(groups = {UpdateApplication.class, DeleteApplication.class})
+    @NotEmpty(groups = {UpdateApplication.class, DeleteApplication.class, UpdateApplicationVeredict.class})
     private String id;
 
-    @NotEmpty(groups = {CreateApplication.class, UpdateApplication.class})
+    @NotNull(groups = {CreateApplication.class, UpdateApplication.class})
     private Integer previousQuarter;
 
-    @NotEmpty(groups = {CreateApplication.class, UpdateApplication.class})
+    @NotNull(groups = {CreateApplication.class, UpdateApplication.class})
     private Integer currentQuarter;
 
-    @NotEmpty(groups = {CreateApplication.class, UpdateApplication.class})
+    @NotNull(groups = {CreateApplication.class, UpdateApplication.class})
     private Float grade;
 
     @NotEmpty(groups = {CreateApplication.class, UpdateApplication.class})
@@ -38,23 +40,37 @@ public class ApplicationDTO {
 
     @Valid
     @NotNull(groups = {CreateApplication.class, UpdateApplication.class})
-    private AnnouncementDTO announcementDTO;
+    private AnnouncementDTO announcement;
 
     @NotEmpty(groups = {CreateApplication.class})
     private String gradeReport;
 
-    @NotEmpty
     private String birthCertificate;
 
-    @NotEmpty
     private List<String> birthCertificateChild;
 
-    @NotEmpty(groups = {CreateApplication.class, UpdateApplication.class})
     private String activity;
+
+    @Valid
+    @NotNull(groups = {CreateApplication.class, UpdateApplication.class})
+    private DivisionDTO division;
+
+    @NotNull(groups = {UpdateApplicationVeredict.class})
+    private Boolean veredict;
+
+    @NotEmpty(groups = {UpdateApplicationVeredict.class})
+    private String comment;
+
+    @NotNull(groups = {UpdateApplicationVeredict.class})
+    private Integer discount;
 
     public Application cloneEntity(){
         return new Application(getId(), getPreviousQuarter(), getCurrentQuarter(), getGrade(), getReason(),
-                getAnnouncementDTO().cloneEntity(), getGradeReport(), getBirthCertificate(),
-                getBirthCertificateChild(), getActivity());
+                getAnnouncement().cloneEntity(), getGradeReport(), getBirthCertificate(),
+                getBirthCertificateChild(), getActivity(), division.cloneEntity());
+    }
+
+    public Application cloneEntitytoVeredict(){
+        return new Application(getId(), getVeredict(), getComment(), getDiscount());
     }
 }

@@ -36,6 +36,7 @@ public class CoordinatorService {
 
     public void save(Coordinator coordinator) throws MessagingException {
         String passGenerated = PasswordGenerator.getPassword();
+        System.out.println(passGenerated);
         coordinator.getUser().setPassword(passGenerated);
         coordinator.getUser().setRole("Comité");
         User newUser = userService.save(coordinator.getUser());
@@ -63,5 +64,10 @@ public class CoordinatorService {
         logbookService.update(prevCoordinator, coordinator);
         coordinator.setUser(new User(coordinator.getUser().getId()));
         coordinatorRepository.save(coordinator);
+    }
+
+    public Coordinator findByUsername (String username){
+        User user = userService.loadUserByUsername(username);
+        return coordinatorRepository.findCoordinatorByUser_Id(user.getId());
     }
 }

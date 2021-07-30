@@ -16,6 +16,10 @@ import java.util.List;
 @Document
 public class Student {
 
+    public Student(String id){
+        this.id = id;
+    }
+
     @Id
     private String id;
     private String name;

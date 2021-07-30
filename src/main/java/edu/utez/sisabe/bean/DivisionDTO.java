@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 public class DivisionDTO {
 
     @NotEmpty(groups = {CreateCareer.class, UpdateCareer.class, UpdateDivision.class, DeleteDivision.class,
-                    UpdateCoordinator.class, CreateCoordinator.class})
+                    UpdateCoordinator.class, CreateCoordinator.class, CreateApplication.class, UpdateApplication.class})
     private String id;
 
     @NotEmpty(groups = {CreateDivision.class, UpdateDivision.class})

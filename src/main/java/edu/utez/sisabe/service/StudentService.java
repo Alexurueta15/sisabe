@@ -67,4 +67,9 @@ public class StudentService {
     public boolean existById(String id){
         return studentRepository.existsById(id);
     }
+
+    public Student findByUsername(String username){
+        User user = userService.loadUserByUsername(username);
+        return studentRepository.findStudentByUser_Id(user.getId());
+    }
 }

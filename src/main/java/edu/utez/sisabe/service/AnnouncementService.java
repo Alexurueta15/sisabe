@@ -30,6 +30,10 @@ public class AnnouncementService {
         return annoucementRepository.findAllByEnabledTrueAndValid(LocalDate.now());
     }
 
+    public Announcement findById(String id) {
+        return annoucementRepository.findAnnouncementById(id);
+    }
+
     public boolean save(Announcement announcement) {
         announcement = annoucementRepository.save(announcement);
         logbookService.save(announcement);

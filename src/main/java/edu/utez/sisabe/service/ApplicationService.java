@@ -81,7 +81,7 @@ public class ApplicationService {
         application.setVeredict(false);
         application = applicationRepository.save(application);
         logbookService.save(application);
-        return existsById(application.getId());
+        return true;
     }
 
     public void update (Application newApplication){

@@ -37,7 +37,7 @@ public interface ApplicationRepository extends MongoRepository<Application,Strin
     })
     List<Application> findAllByValidatedTrueAndDivision_IdAndActual(String id, LocalDate actual);
 
-    @Aggregation(value = {"{$match:{validated:true}}",
+    @Aggregation(value = {"{$match:{$and:[{validated:true},{'student._id':?0}]}}",
             "{$lookup: {from: 'announcement', localField: 'announcement._id', foreignField: '_id', as: 'announcement'}}",
             "{$unwind: '$announcement'}",
             "{$lookup: {from: 'scholarship', localField: 'announcement.scholarship._id', foreignField: '_id', as: 'announcement.scholarship'}}",
@@ -50,7 +50,7 @@ public interface ApplicationRepository extends MongoRepository<Application,Strin
             "{$unwind: '$coordinator'}"})
     List<Application> findAllByStudent_IdAAndValidatedTrue(String id);
 
-    @Aggregation(value = {"{$match:{validated:false}}",
+    @Aggregation(value = {"{$match:{$and:[{validated:true},{'student._id':?0}]}}",
             "{$lookup: {from: 'announcement', localField: 'announcement._id', foreignField: '_id', as: 'announcement'}}",
             "{$unwind: '$announcement'}",
             "{$lookup: {from: 'scholarship', localField: 'announcement.scholarship._id', foreignField: '_id', as: 'announcement.scholarship'}}",

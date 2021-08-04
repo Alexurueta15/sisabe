@@ -63,12 +63,12 @@ public class ApplicationService {
         if (application.getGradeReport()==null)
             return false;
 
-        if (announcement.getScholarship().getCategory().equals("Madres solteras")){
+        if (announcement.getScholarship().getCategory().equals("Madre soltera")){
 
             if (application.getBirthCertificate()==null || application.getBirthCertificateChild()==null || application.getBirthCertificateChild().size() == 0)
                 return false;
         }
-        if (announcement.getScholarship().getCategory().equals("Deportiva")){
+        if (announcement.getScholarship().getCategory().equals("Extracurricular")){
 
             if (application.getActivity()==null)
                 return false;

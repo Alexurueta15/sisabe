@@ -13,7 +13,7 @@ public interface ApplicationRepository extends MongoRepository<Application,Strin
 
     @Aggregation(value = {"{$lookup: {from: 'announcement', localField: 'announcement._id', foreignField: '_id', as: 'announcement'}}",
             "{$unwind: '$announcement'}",
-            "{$match:{$and:[{'division._id':{$lte: ?0}},{validated:false},{'announcement.enabled':true},{'announcement.startDate':{$lte: ?1}},{'announcement.finalDate':{$gte: ?1}}]}}",
+            "{$match:{$and:[{'division._id': ?0},{validated:false},{'announcement.enabled':true},{'announcement.startDate':{$lte: ?1}},{'announcement.finalDate':{$gte: ?1}}]}}",
             "{$lookup: {from: 'scholarship', localField: 'announcement.scholarship._id', foreignField: '_id', as: 'announcement.scholarship'}}",
             "{$unwind: '$announcement.scholarship'}",
             "{$lookup: {from: 'student', localField: 'student._id', foreignField: '_id', as: 'student'}}",
@@ -25,7 +25,7 @@ public interface ApplicationRepository extends MongoRepository<Application,Strin
 
     @Aggregation(value = {"{$lookup: {from: 'announcement', localField: 'announcement._id', foreignField: '_id', as: 'announcement'}}",
             "{$unwind: '$announcement'}",
-            "{$match:{$and:[{'division._id':{$lte: ?0}},{'validated':true},{'announcement.enabled':true},{'announcement.startDate':{$lte: ?1}},{'announcement.finalDate':{$gte: ?1}}]}}",
+            "{$match:{$and:[{'division._id': ?0},{'validated':true},{'announcement.enabled':true},{'announcement.startDate':{$lte: ?1}},{'announcement.finalDate':{$gte: ?1}}]}}",
             "{$lookup: {from: 'scholarship', localField: 'announcement.scholarship._id', foreignField: '_id', as: 'announcement.scholarship'}}",
             "{$unwind: '$announcement.scholarship'}",
             "{$lookup: {from: 'student', localField: 'student._id', foreignField: '_id', as: 'student'}}",
